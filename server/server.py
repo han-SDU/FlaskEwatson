@@ -14,10 +14,10 @@ app = Flask(__name__)
 FlaskJSON(app)
 
 #Other routes, each endpoint should get its own file
-import sensors
-import temperatures
-import CO2
-import humidities
+from api import sensors
+from api import temperatures
+from api import CO2
+from api import humidities
 
 #config for running dev, havent looked at prod server yet
 if __name__ == '__main__':
