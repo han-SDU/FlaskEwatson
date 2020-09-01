@@ -1,6 +1,7 @@
-from connectionService import ConnectionService
+from model.connectionService import ConnectionService
+import socket
 
-class TemperatureModel():
+class PressureModel():
 	def __init__(self,id,time,value):
 		self.id = id
 		self.time = time
@@ -10,13 +11,14 @@ class TemperatureModel():
 		# Init
 		conn = ConnectionService.get_connection()
 		cur = conn.cursor()
+
 		# Execution
-		cur.execute('Insert into tbl_temperature(fld_time,fld_value) values (NOW(),?)',(self.value,))
+		cur.execute('Insert into tbl_pressure(fld_time,fld_value) values (NOW(),?)',(self.value,))
 		conn.commit()
 
 		# Update this Object with
 		self.id = cur.lastrowid
-		self.time = TemperatureModel.get_by_id(self.id).time
+		self.time = PressureModel.get_by_id(self.id).time
 
 		# Clean and return
 		conn.close()
@@ -27,7 +29,16 @@ class TemperatureModel():
 		pass
 
 	def to_json(self):
-		pass
+		data = {
+			'type': 'Pressure Sensor reading',
+			'id': self.id,
+			'attributes': {
+				'value': str(self.value),
+				'readingTime': self.time,
+				'readingUnit': '!!!WHAT UNIT!!!'
+				}
+			}
+		return data
 
 	@staticmethod
 	def delete(id):
@@ -40,12 +51,13 @@ class TemperatureModel():
 		returnValue = None
 		conn = ConnectionService.get_connection()
 		cur = conn.cursor()
+
 		# Execution
-		cur.execute('Select * from tbl_temperature where fld_pk_id=?', (id,))
+		cur.execute('Select * from tbl_pressure where fld_pk_id=?', (id,))
 
 		# Formatting of return data
 		for id,time,value in cur:
-			returnValue = TemperatureModel(id,time,value)
+			returnValue = PressureModel(id,time,value)
 
 		# Clean and return
 		conn.close()
@@ -57,12 +69,13 @@ class TemperatureModel():
 		returnValue = []
 		conn = ConnectionService.get_connection()
 		cur = conn.cursor()
+
 		# Execution
-		cur.execute('Select * from tbl_temperature')
+		cur.execute('Select * from tbl_pressure')
 
 		# Formatting of return data
 		for id,time,value in cur:
-			temp = TemperatureModel(id,time,value)
+			temp = PressureModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
@@ -76,12 +89,13 @@ class TemperatureModel():
 		returnValue = []
 		conn = ConnectionService.get_connection()
 		cur = conn.cursor()
+
 		# Execution
-		cur.execute('Select * from tbl_temperature where fld_time>=? and fld_time<=?', (start,end,))
+		cur.execute('Select * from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
 		for id,time,value in cur:
-			temp = TemperatureModel(id,time,value)
+			temp = PressureModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return

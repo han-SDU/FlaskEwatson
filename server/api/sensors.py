@@ -1,58 +1,40 @@
-# Endpoint for sensor route
-from __main__ import app, res, req
+# Abstract endpoint grouping  sensor readings together
+from server.server import app
+from flask_json import json_response as res
+from flask import request as req
+from flask import abort
 from datetime import datetime
+from model.SensorModel import SensorModel
+import mariadb
+
 
 @app.route('/sensors', methods=['GET'])
 def sensors_get_all():
-	return res(501, time=datetime.utcnow()) #200 array in res
+	try:
+		dataArray = []
+		sensor = SensorModel.get_all()
+		data = sensor.to_json()
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
 
-@app.route('/sensors/<int:id>', methods=['GET'])
-def sensors_get_by_id(id):
-	#Depends on how data is stored in the database
-	print(id)
-	return res(501, time=datetime.utcnow()) #200 single obj in res
 
 @app.route('/sensors/search', methods=['GET'])
 def sensors_get_by_search():
-	#Depends on how the timestamp is stored in the database
-	start = req.args.get('start')
-	end = req.args.get('end')
-	return res(501, time=datetime.utcnow()) # 200 array in res
+	try:
+		start = req.args.get('start')
+		if start is None:
+			start = '2020-01-01T00:00:00'
 
-@app.route('/sensors', methods=['POST'])
-def sensors_post():
-	#Probably not needed
-	return res(501, time=datetime.utcnow()) #201 created obj in res
+		end = req.args.get('end')
+		if end is None:
+			end = datetime.utcnow()
 
-@app.route('/sensors/<int:id>', methods=['DELETE'])
-def sensors_delete_by_id(id):
-	#Probably not needed
-	return res(501, time=datetime.utcnow()) #200 no response
-
-@app.route('/sensors/<int:id>', methods=['PUT'])
-def sensors_put_by_id(id):
-	#Probably not needed
-	return res(501, time=datetime.utcnow()) #200 changed obj in res
+		sensor = SensorModel.get_by_search(start,end)
+		data = sensor.to_json()
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
 
 
-@app.route('/sensors/dummy', methods=['GET'])
-def sensors_get_dummy():
-	#An example of how the response should be formatted whgen we have a valid object
-
-	data = {
-		'type': 'sensorType',
-		'id': 'idOfRessource',
-		'attributes': 	{
-				'reading': 'over 9000',
-				'reading unit': 'cows per kwh'
-				},
-		'links': 	{
-				'self': 'http://IP:PORT/sensors/id',
-				'next': '',
-				'prev': '',
-				'first': '',
-				'last': ''
-				}
-		}
-	return res(200, data=data ,time=datetime.utcnow())
 
