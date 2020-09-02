@@ -7,7 +7,6 @@ from datetime import datetime
 from model.SensorModel import SensorModel
 import mariadb
 
-
 @app.route('/sensors', methods=['GET'])
 def sensors_get_all():
 	try:

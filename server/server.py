@@ -7,20 +7,18 @@ from flask_json import FlaskJSON
 from flask_json import json_response as res
 import traceback
 
-#Start up
 app = Flask(__name__)
 FlaskJSON(app)
 
-#Other routes, each endpoint should get its own file
-from server.api import sensors
+#Other routes, each endpoint should get its own file	from server.api import sensors
 from server.api import temperatures
 from server.api import CO2
 from server.api import humidities
 from server.api import pressures
+from server.api import sensors
 
 # Error Handlers for app
 @app.errorhandler(404)
-
 def handler_404(e):
 	return res(404, error=str(e), time=datetime.utcnow())
 
@@ -38,5 +36,8 @@ def handler_default(e):
 	traceback.print_exc()
 	return res(500, error=str(e), time=datetime.utcnow())
 
-#config for running dev, havent looked at prod server yet
-app.run(debug=True, host='0.0.0.0', port=5000)
+
+#Start up
+def run():
+	#config for running dev, havent looked at prod server yet
+	app.run(debug=False, host='0.0.0.0', port=5000)
