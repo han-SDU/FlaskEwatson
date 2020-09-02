@@ -10,7 +10,8 @@ class SensorModel():
 		self.co2 = co2
 		self.temperatures = temperatures
 
-	def to_json(self):
+	# Used if container is filled with arrays
+	def to_json_array(self):
 		# Init
 		pressureJsonArray = []
 		humidityJsonArray = []
@@ -32,7 +33,7 @@ class SensorModel():
 
 		# Return data
 		data = {
-			'type': 'All Sensor readings',
+			'type': 'All sensor readings',
 			'attributes': {
 				'pressures': pressureJsonArray,
 				'humidities': humidityJsonArray,
@@ -41,6 +42,38 @@ class SensorModel():
 				}
 			}
 		return data
+
+	# Used if variables are only one value
+	def to_single_json(self):
+		# Init
+		pressureJson = self.pressures.to_json()
+		humidityJson = self.humidities.to_json()
+		co2Json = self.co2.to_json()
+		temperatureJson = self.temperatures.to_json()
+
+		# Return data
+		data = {
+			'type': 'All sensor readings',
+			'attributes': {
+				'pressure': pressureJson,
+				'humiditie': humidityJson,
+				'co2': co2Json,
+				'temperature': temperatureJson
+				}
+			}
+		return data
+
+	def to_average_json(self):
+		json = {
+			'type': 'All sensor average',
+			'Attributes': {
+				'pressure': PressureModel.average_json(self.pressures),
+				'humidity': HumidityModel.average_json(self.humidities),
+				'co2': CO2Model.average_json(self.co2),
+				'temperature': TemperatureModel.average_json(self.temperatures)
+				}
+			}
+		return json
 
 	# The nuclear option, sending an entire database via json
 	@staticmethod
@@ -77,6 +110,84 @@ class SensorModel():
 		foundHumidities = HumidityModel.get_by_search(start,end)
 		foundCo2 = CO2Model.get_by_search(start,end)
 		foundTemperatures = TemperatureModel.get_by_search(start,end)
+
+		# Build object
+		returnObj = SensorModel(foundPressure, foundHumidities, foundCo2, foundTemperatures)
+
+		# Clean and return
+		return returnObj
+
+	def get_oldest():
+		# init
+		foundPressure = None
+		foundHumidities = None
+		foundCo2 = None
+		foundTemperatures = None
+
+		# Execution (4 connection, could be more effecient but query time is hardly an issue)
+		foundPressure = PressureModel.get_oldest()
+		foundHumidities = HumidityModel.get_oldest()
+		foundCo2 = CO2Model.get_oldest()
+		foundTemperatures = TemperatureModel.get_oldest()
+
+		# Build object
+		returnObj = SensorModel(foundPressure, foundHumidities, foundCo2, foundTemperatures)
+
+		# Clean and return
+		return returnObj
+
+
+	def get_newest():
+		# init
+		foundPressure = None
+		foundHumidities = None
+		foundCo2 = None
+		foundTemperatures = None
+
+		# Execution (4 connection, could be more effecient but query time is hardly an issue)
+		foundPressure = PressureModel.get_newest()
+		foundHumidities = HumidityModel.get_newest()
+		foundCo2 = CO2Model.get_newest()
+		foundTemperatures = TemperatureModel.get_newest()
+
+		# Build object
+		returnObj = SensorModel(foundPressure, foundHumidities, foundCo2, foundTemperatures)
+
+		# Clean and return
+		return returnObj
+
+	def get_average():
+		# init
+		foundPressure = None
+		foundHumidities = None
+		foundCo2 = None
+		foundTemperatures = None
+
+		# Execution (4 connection, could be more effecient but query time is hardly an issue)
+		foundPressure = PressureModel.get_average()
+		foundHumidities = HumidityModel.get_average()
+		foundCo2 = CO2Model.get_average()
+		foundTemperatures = TemperatureModel.get_average()
+
+		# Build object
+		returnObj = SensorModel(foundPressure, foundHumidities, foundCo2, foundTemperatures)
+
+		# Clean and return
+		return returnObj
+
+
+	def get_average_by_range():
+		# init
+		foundPressure = None
+		foundHumidities = None
+		foundCo2 = None
+		foundTemperatures = None
+
+		# Execution (4 connection, could be more effecient but query time is hardly an issue)
+		foundPressure = PressureModel.get_average_by_rage(start,end)
+		foundHumidities = HumidityModel.get_average_by_range(start,end)
+		foundCo2 = CO2Model.get_average_by_range(start,end)
+		foundTemperatures = TemperatureModel.get_average_by_range(start,end)
 
 		# Build object
 		returnObj = SensorModel(foundPressure, foundHumidities, foundCo2, foundTemperatures)

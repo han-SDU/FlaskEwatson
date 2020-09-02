@@ -1,5 +1,4 @@
 from model.connectionService import ConnectionService
-import socket
 
 class CO2Model():
 	def __init__(self,id,time,value):
@@ -30,7 +29,7 @@ class CO2Model():
 
 	def to_json(self):
 		data = {
-			'type': 'CO2 Sensor reading',
+			'type': 'CO2 sensor reading',
 			'id': self.id,
 			'attributes': {
 				'value': str(self.value),
@@ -39,6 +38,17 @@ class CO2Model():
 				}
 			}
 		return data
+
+	@staticmethod
+	def average_json(avgDecimal):
+		json = {
+			'type': 'CO2 average',
+			'attributes': {
+					'average': str(avgDecimal),
+					'readingUnit' : '!!! SOME UNIT IDK !!!'
+					}
+			}
+		return json
 
 	@staticmethod
 	def delete(id):

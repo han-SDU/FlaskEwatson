@@ -30,7 +30,7 @@ class PressureModel():
 
 	def to_json(self):
 		data = {
-			'type': 'Pressure Sensor reading',
+			'type': 'Pressure sensor reading',
 			'id': self.id,
 			'attributes': {
 				'value': str(self.value),
@@ -39,6 +39,17 @@ class PressureModel():
 				}
 			}
 		return data
+
+	@staticmethod
+	def average_json(avgDecimal):
+		json = {
+			'type': 'Pressure average',
+			'attributes': {
+					'average': str(avgDecimal),
+					'readingUnit' : '!!! SOME UNIT IDK !!!'
+					}
+			}
+		return json
 
 	@staticmethod
 	def delete(id):

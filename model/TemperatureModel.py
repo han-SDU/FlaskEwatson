@@ -1,5 +1,4 @@
 from model.connectionService import ConnectionService
-import socket
 
 class TemperatureModel():
 	def __init__(self,id,time,value):
@@ -29,34 +28,23 @@ class TemperatureModel():
 		pass
 
 	def to_json(self):
-		# This is getting localhost
-		hostname = socket.gethostname()
-		ip_adress = socket.gethostbyname(hostname)
-
 		data = {
-			'type': 'Temperature Sensor reading',
+			'type': 'Temperature sensor reading',
 			'id': self.id,
 			'attributes': {
 				'value': str(self.value),
 				'readingTime': self.time,
 				'readingUnit': '!!!WHAT UNIT!!!'
-				},
-			'links': {
-				'self': 'http://'+str(ip_adress)+':5000/temperatures/'+str(self.id),
-				'first': '!',
-				'last': '!'
-				},
-			'meta': {
-				'count': '!'
 				}
 			}
 		return data
+
 	@staticmethod
 	def average_json(avgDecimal):
 		json = {
-			'type': 'Temperature Average',
-			'Attributes': {
-					'value': str(avgDecimal),
+			'type': 'Temperature average',
+			'attributes': {
+					'average': str(avgDecimal),
 					'readingUnit' : '!!! SOME UNIT IDK !!!'
 					}
 			}

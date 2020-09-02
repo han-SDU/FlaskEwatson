@@ -1,5 +1,4 @@
 from model.connectionService import ConnectionService
-import socket
 
 class HumidityModel():
 	def __init__(self,id,time,value):
@@ -30,7 +29,7 @@ class HumidityModel():
 
 	def to_json(self):
 		data = {
-			'type': 'Humidity Sensor reading',
+			'type': 'Humidity sensor reading',
 			'id': self.id,
 			'attributes': {
 				'value': str(self.value),
@@ -39,6 +38,17 @@ class HumidityModel():
 				}
 			}
 		return data
+
+	@staticmethod
+	def average_json(avgDecimal):
+		json = {
+			'type': 'Humidity average',
+			'attributes': {
+					'average': str(avgDecimal),
+					'readingUnit' : '!!! SOME UNIT IDK !!!'
+					}
+			}
+		return json
 
 	@staticmethod
 	def delete(id):

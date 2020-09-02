@@ -1,5 +1,6 @@
 # Main entry point for the server application
 from flask import Flask
+from flask import url_for
 from flask import request as req
 from datetime import datetime
 from flask_json import FlaskJSON
@@ -36,7 +37,6 @@ def handler_501(e):
 def handler_default(e):
 	traceback.print_exc()
 	return res(500, error=str(e), time=datetime.utcnow())
-
 
 #config for running dev, havent looked at prod server yet
 app.run(debug=True, host='0.0.0.0', port=5000)
