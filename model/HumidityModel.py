@@ -17,7 +17,7 @@ class HumidityModel():
 
 		# Update this Object with
 		self.id = cur.lastrowid
-		self.time = Humidity.get_by_id(self.id).time
+		self.time = HumidityModel.get_by_id(self.id).time
 
 		# Clean and return
 		conn.close()
