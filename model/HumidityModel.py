@@ -101,3 +101,73 @@ class HumidityModel():
 		# Clean and return
 		conn.close()
 		return returnValue
+
+
+	@staticmethod
+	def get_oldest():
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
+
+		# Execution
+		cur.execute('Select * from tbl_humidity order by fld_time asc limit 1')
+
+		# Formatting of return data
+		for id,time,value in cur:
+			returnValue = HumidityModel(id,time,value)
+
+		# Clean and return
+		return returnValue
+
+	@staticmethod
+	def get_newest():
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
+
+		# Execution
+		cur.execute('Select * from tbl_humidity order by fld_time desc limit 1')
+
+		# Formatting of return data
+		for id,time,value in cur:
+			returnValue = HumidityModel(id,time,value)
+
+		# Clean and return
+		return returnValue
+
+	@staticmethod
+	def get_average():
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
+
+		# Execution
+		cur.execute('Select AVG(fld_value) from tbl_humidity')
+
+		# Formatting of return data
+		for c in cur:
+			returnValue = c[0] #Average
+
+		# Clean and return
+		return returnValue
+
+
+	@staticmethod
+	def get_average_by_range(start,end):
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
+
+		# Execution
+		cur.execute('Select AVG(fld_value) from tbl_humidity where fld_time>=? and fld_time<=?', (start,end,))
+
+		# Formatting of return data
+		for c in cur:
+			returnValue = c[0] #Average
+
+		# Clean and return
+		return returnValue

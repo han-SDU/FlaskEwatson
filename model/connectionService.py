@@ -1,5 +1,6 @@
 import mariadb
 
+
 class ConnectionService:
 	@staticmethod
 	def get_connection():

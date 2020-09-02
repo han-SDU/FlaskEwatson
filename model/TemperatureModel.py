@@ -27,8 +27,12 @@ class TemperatureModel():
 	def put(self):
 		# Not needing this implementation
 		pass
-	# TODO extra values
+
 	def to_json(self):
+		# This is getting localhost
+		hostname = socket.gethostname()
+		ip_adress = socket.gethostbyname(hostname)
+
 		data = {
 			'type': 'Temperature Sensor reading',
 			'id': self.id,
@@ -36,10 +40,17 @@ class TemperatureModel():
 				'value': str(self.value),
 				'readingTime': self.time,
 				'readingUnit': '!!!WHAT UNIT!!!'
+				},
+			'links': {
+				'self': 'http://'+str(ip_adress)+':5000/temperatures/'+str(self.id),
+				'first': '!',
+				'last': '!'
+				},
+			'meta': {
+				'count': '!'
 				}
 			}
 		return data
-
 	@staticmethod
 	def average_json(avgDecimal):
 		json = {

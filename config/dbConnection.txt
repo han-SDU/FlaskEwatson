@@ -1,5 +1,0 @@
-[db]
-user = "root"
-pw = "test"
-host = "localhost"
-db = "sensorDB"

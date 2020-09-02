@@ -15,6 +15,7 @@ from server.api import sensors
 from server.api import temperatures
 from server.api import CO2
 from server.api import humidities
+from server.api import pressures
 
 # Error Handlers for app
 @app.errorhandler(404)

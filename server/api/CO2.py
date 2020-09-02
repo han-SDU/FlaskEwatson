@@ -48,6 +48,54 @@ def co2_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
+@app.route('/co2/oldest', methods=['GET'])
+def co2_get_oldest():
+	try:
+		returnValue = CO2Model.get_oldest()
+		if returnValue is None:
+			abort(404)
+		data = returnValue.to_json()
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/co2/newest', methods=['GET'])
+def co2_get_newest():
+	try:
+		returnValue = CO2Model.get_newest()
+		if returnValue is None:
+			abort(404)
+		data = returnValue.to_json()
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/co2/average', methods=['GET'])
+def co2_get_average():
+	try:
+		returnValue = CO2Model.get_average()
+		data = CO2Model.average_json(returnValue)
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/co2/average/range', methods=['GET'])
+def co2_get_average_in_range():
+	try:
+		start = req.args.get('start')
+		if start is None:
+			start = '2020-01-01T00:00:00'
+
+		end = req.args.get('end')
+		if end is None:
+			end = datetime.utcnow()
+
+		returnValue = CO2Model.get_average_by_range(start,end)
+		data = CO2Model.average_json(returnValue)
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
 @app.route('/co2', methods=['POST'])
 def co2_post():
         #Probably not needed

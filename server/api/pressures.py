@@ -4,7 +4,7 @@ from flask_json import json_response as res
 from flask import request as req
 from flask import abort
 from datetime import datetime
-from model.TemperatureModel import TemperatureModel
+from model.PressureModel import PressureModel
 import mariadb
 
 @app.route('/pressures', methods=['GET'])
@@ -45,6 +45,54 @@ def pressure_get_by_search():
 		for tempModel in pressArray:
 			dataArray.append(tempModel.to_json())
 		return res(200, data=dataArray, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/pressures/oldest', methods=['GET'])
+def pressure_get_oldest():
+	try:
+		returnValue = PressureModel.get_oldest()
+		if returnValue is None:
+			abort(404)
+		data = returnValue.to_json()
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/pressures/newest', methods=['GET'])
+def pressure_get_newest():
+	try:
+		returnValue = PressureModel.get_newest()
+		if returnValue is None:
+			abort(404)
+		data = returnValue.to_json()
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/pressures/average', methods=['GET'])
+def pressures_get_average():
+	try:
+		returnValue = PressureModel.get_average()
+		data = PressureModel.average_json(returnValue)
+		return res(200, data=data, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/pressures/average/range', methods=['GET'])
+def pressure_get_average_in_range():
+	try:
+		start = req.args.get('start')
+		if start is None:
+			start = '2020-01-01T00:00:00'
+
+		end = req.args.get('end')
+		if end is None:
+			end = datetime.utcnow()
+
+		returnValue = PressureModel.get_average_by_range(start,end)
+		data = PressureModel.average_json(returnValue)
+		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
