@@ -35,7 +35,7 @@ class PressureModel():
 			'attributes': {
 				'value': str(self.value),
 				'readingTime': self.time,
-				'readingUnit': '!!!WHAT UNIT!!!'
+				'readingUnit': 'hPa'
 				}
 			}
 		return data
@@ -46,7 +46,7 @@ class PressureModel():
 			'type': 'Pressure average',
 			'attributes': {
 					'average': str(avgDecimal),
-					'readingUnit' : '!!! SOME UNIT IDK !!!'
+					'readingUnit' : 'hPa'
 					}
 			}
 		return json

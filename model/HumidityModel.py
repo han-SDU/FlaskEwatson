@@ -34,7 +34,7 @@ class HumidityModel():
 			'attributes': {
 				'value': str(self.value),
 				'readingTime': self.time,
-				'readingUnit': '!!!WHAT UNIT!!!'
+				'readingUnit': '%'
 				}
 			}
 		return data
@@ -45,7 +45,7 @@ class HumidityModel():
 			'type': 'Humidity average',
 			'attributes': {
 					'average': str(avgDecimal),
-					'readingUnit' : '!!! SOME UNIT IDK !!!'
+					'readingUnit' : '%'
 					}
 			}
 		return json

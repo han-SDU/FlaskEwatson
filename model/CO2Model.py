@@ -34,7 +34,7 @@ class CO2Model():
 			'attributes': {
 				'value': str(self.value),
 				'readingTime': self.time,
-				'readingUnit': '!!!WHAT UNIT!!!'
+				'readingUnit': 'ppm'
 				}
 			}
 		return data
@@ -45,7 +45,7 @@ class CO2Model():
 			'type': 'CO2 average',
 			'attributes': {
 					'average': str(avgDecimal),
-					'readingUnit' : '!!! SOME UNIT IDK !!!'
+					'readingUnit' : 'ppm'
 					}
 			}
 		return json
