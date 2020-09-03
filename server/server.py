@@ -5,10 +5,12 @@ from flask import request as req
 from datetime import datetime
 from flask_json import FlaskJSON
 from flask_json import json_response as res
+from flask_cors import CORS
 import traceback
 
 app = Flask(__name__)
 FlaskJSON(app)
+CORS(app)
 
 #Other routes, each endpoint should get its own file	from server.api import sensors
 from server.api import temperatures
