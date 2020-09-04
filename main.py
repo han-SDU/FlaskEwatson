@@ -1,4 +1,7 @@
 import threading
+import sys
+import getopt
+import os
 from threading import Event
 from server import server
 from sensor import temperatureSensor
@@ -7,9 +10,17 @@ from sensor import humiditySensor
 from sensor import co2Sensor
 
 # Main entry point of application
-def main():
+def main(argv):
 	try:
+		# Parsing argv
+		opts, args = getopt.getopt(argv,"-d","--development")
+		for opt, arg in opts:
+			if opt == "-d":
+				os.environ["DEVELOPMENT"] = "1"
+
 		print('Application Started')
+		if os.environ.get("DEVELOPMENT") == "1":
+			print("Application started in DEVELOPMENT mode")
 
 		# Sensor related start up
 		print('Starting Temperature Sensor')
@@ -39,4 +50,4 @@ def main():
 		print('Shutting down')
 
 if __name__=="__main__":
-	main()
+	main(sys.argv[1:])

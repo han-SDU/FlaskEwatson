@@ -1,9 +1,16 @@
 # Module responsible to talk to the co2 sensor hardware
 import time
 import random
+import os
 from model.CO2Model import CO2Model
 
 def run():
+	if os.environ.get("DEVELOPMENT") == "1":
+		mockRun()
+	else:
+		collectData()
+
+def mockRun():
 	while True:
 		# Create Mock data
 		value = random.uniform(0,69)
@@ -15,3 +22,5 @@ def run():
 
 		time.sleep(5)
 
+def collectData():
+	raise NotImplementedError
