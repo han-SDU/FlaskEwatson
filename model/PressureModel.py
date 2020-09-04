@@ -129,6 +129,7 @@ class PressureModel():
 			returnValue = PressureModel(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -146,6 +147,7 @@ class PressureModel():
 			returnValue = PressureModel(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -163,6 +165,7 @@ class PressureModel():
 			returnValue = c[0] #Average
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 
@@ -181,4 +184,5 @@ class PressureModel():
 			returnValue = c[0] #Average
 
 		# Clean and return
+		conn.close()
 		return returnValue

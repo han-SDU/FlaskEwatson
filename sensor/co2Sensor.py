@@ -10,6 +10,7 @@ def run():
 		newReading = CO2Model(None,None,value)
 
 		# Insert into db
+		print("Generating mock data for co2 sensor with value: "+str(value))
 		newReading.post()
 
 		time.sleep(5)

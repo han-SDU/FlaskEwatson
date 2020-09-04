@@ -127,6 +127,7 @@ class TemperatureModel():
 			returnValue = TemperatureModel(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -144,6 +145,7 @@ class TemperatureModel():
 			returnValue = TemperatureModel(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -161,6 +163,7 @@ class TemperatureModel():
 			returnValue = c[0] #Average
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 
@@ -179,4 +182,5 @@ class TemperatureModel():
 			returnValue = c[0] #Average
 
 		# Clean and return
+		conn.close()
 		return returnValue

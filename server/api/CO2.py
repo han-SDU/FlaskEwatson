@@ -21,7 +21,7 @@ def co2_get_all():
 @app.route('/co2/<int:id>', methods=['GET'])
 def co2_get_by_id(id):
 	try:
-		returnValue = CO2.get_by_id(id)
+		returnValue = CO2Model.get_by_id(id)
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()

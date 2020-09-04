@@ -56,7 +56,7 @@ class SensorModel():
 			'type': 'All sensor readings',
 			'attributes': {
 				'pressure': pressureJson,
-				'humiditie': humidityJson,
+				'humidity': humidityJson,
 				'co2': co2Json,
 				'temperature': temperatureJson
 				}
@@ -66,7 +66,7 @@ class SensorModel():
 	def to_average_json(self):
 		json = {
 			'type': 'All sensor average',
-			'Attributes': {
+			'attributes': {
 				'pressure': PressureModel.average_json(self.pressures),
 				'humidity': HumidityModel.average_json(self.humidities),
 				'co2': CO2Model.average_json(self.co2),
@@ -176,7 +176,7 @@ class SensorModel():
 		return returnObj
 
 
-	def get_average_by_range():
+	def get_average_by_range(start,end):
 		# init
 		foundPressure = None
 		foundHumidities = None
@@ -184,7 +184,7 @@ class SensorModel():
 		foundTemperatures = None
 
 		# Execution (4 connection, could be more effecient but query time is hardly an issue)
-		foundPressure = PressureModel.get_average_by_rage(start,end)
+		foundPressure = PressureModel.get_average_by_range(start,end)
 		foundHumidities = HumidityModel.get_average_by_range(start,end)
 		foundCo2 = CO2Model.get_average_by_range(start,end)
 		foundTemperatures = TemperatureModel.get_average_by_range(start,end)

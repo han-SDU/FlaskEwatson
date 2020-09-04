@@ -128,6 +128,7 @@ class HumidityModel():
 			returnValue = HumidityModel(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -145,6 +146,7 @@ class HumidityModel():
 			returnValue = HumidityModel(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -180,4 +182,5 @@ class HumidityModel():
 			returnValue = c[0] #Average
 
 		# Clean and return
+		conn.close()
 		return returnValue

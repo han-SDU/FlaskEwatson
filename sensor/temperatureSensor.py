@@ -10,6 +10,7 @@ def run():
 		newReading = TemperatureModel(None,None,value)
 
 		# Save to db
+		print("Generating mock data for temperature sensor with value: "+str(value))
 		newReading.post()
 
 		time.sleep(5)

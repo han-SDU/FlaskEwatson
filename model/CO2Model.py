@@ -128,6 +128,7 @@ class CO2Model():
 			returnValue = CO2Model(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -145,6 +146,7 @@ class CO2Model():
 			returnValue = CO2Model(id,time,value)
 
 		# Clean and return
+		conn.close()
 		return returnValue
 
 	@staticmethod
@@ -180,4 +182,5 @@ class CO2Model():
 			returnValue = c[0] #Average
 
 		# Clean and return
+		conn.close()
 		return returnValue

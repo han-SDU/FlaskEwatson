@@ -10,6 +10,7 @@ def run():
 		newReading = PressureModel(None,None,value)
 
 		# Insert
+		print("Generating mock data for pressure sensor with value: "+str(value))
 		newReading.post()
 
 		time.sleep(5)
