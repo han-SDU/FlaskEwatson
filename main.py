@@ -2,7 +2,9 @@ import threading
 import sys
 import getopt
 import os
+import argparse
 import logging
+import logging.handlers as handlers
 from threading import Event
 from server import server
 from sensor import temperatureSensor
@@ -12,25 +14,38 @@ from sensor import co2Sensor
 
 # Main entry point of application
 def main(argv):
+	# Parsing argv
+	parser = argparse.ArgumentParser()
+
+	parser.add_argument("-d","--development", help="Sets runtime enviroment",action="store_true", dest="development")
+	parser.add_argument("-cll","--consolLoglevel", help="Sets verbosity of consol logging" ,choices=["DEBUG","INFO","WARNING","ERROR","CRITICAL"],default="WARNING",action="store",dest="consolLogLevel")
+	parser.add_argument("-fll","--fileLoglevel", help="Sets verbosity of file logging" ,choices=["DEBUG","INFO","WARNING","ERROR","CRITICAL"],default="WARNING",action="store",dest="fileLogLevel")
+
+	args = parser.parse_args()
+
 	try:
-		logging.basicConfig(
-			level=logging.DEBUG,
-			format="[%(levelname)s][%(asctime)s] %(threadName)s [%(module)s]: %(message)s",
-			handlers=[
-				logging.FileHandler("logging.log"),
-				logging.StreamHandler()
-			]
-		)
+		# Setting up logger
+		logFormatter = logging.Formatter("%(asctime)s %(levelname)-8s %(threadName)-25s %(module)-25s %(message)s")
+		rootLogger = logging.getLogger()
+		rootLogger.setLevel(logging.DEBUG)
 
-		# Parsing argv
-		opts, args = getopt.getopt(argv,"-d","--development")
-		for opt, arg in opts:
-			if opt == "-d":
-				os.environ["DEVELOPMENT"] = "1"
+		# Consol handler
+		consolLogger = logging.StreamHandler()
+		consolLogger.setLevel(args.consolLogLevel)
+		consolLogger.setFormatter(logFormatter)
+		rootLogger.addHandler(consolLogger)
 
+		# File handler
+		fileLogger = handlers.RotatingFileHandler(filename="logging/logging.log",maxBytes=10*1024*1024,backupCount=5)
+		fileLogger.setLevel(args.fileLogLevel)
+		fileLogger.setFormatter(logFormatter)
+		rootLogger.addHandler(fileLogger)
+
+		# Setting up runtime enviroment
 		logging.info("Application started")
-		if os.environ.get("DEVELOPMENT") == "1":
+		if args.development == True:
 			logging.info("Application started in DEVELOPMENT mode")
+			os.environ["DEVELOPMENT"]="1"
 
 		# Sensor related start up
 		logging.info('Starting Temperature Sensor')
