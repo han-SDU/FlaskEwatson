@@ -2,7 +2,10 @@
 import time
 import random
 import os
+import logging
 from model.CO2Model import CO2Model
+
+logger = logging.getLogger(__name__)
 
 def run():
 	if os.environ.get("DEVELOPMENT") == "1":
@@ -17,7 +20,7 @@ def mockRun():
 		newReading = CO2Model(None,None,value)
 
 		# Insert into db
-		print("Generating mock data for co2 sensor with value: "+str(value))
+		logger.info("Generating mock data for co2 sensor with value: "+str(value))
 		newReading.post()
 
 		time.sleep(5)

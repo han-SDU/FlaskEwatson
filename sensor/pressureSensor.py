@@ -2,7 +2,10 @@
 import time
 import os
 import random
+import logging
 from model.PressureModel import PressureModel
+
+logger = logging.getLogger(__name__)
 
 def run():
 	if os.environ.get("DEVELOPMENT") == "1":
@@ -17,7 +20,7 @@ def mockRun():
 		newReading = PressureModel(None,None,value)
 
 		# Insert
-		print("Generating mock data for pressure sensor with value: "+str(value))
+		logger.info("Generating mock data for pressure sensor with value: "+str(value))
 		newReading.post()
 
 		time.sleep(5)

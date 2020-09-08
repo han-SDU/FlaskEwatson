@@ -2,7 +2,10 @@
 import time
 import os
 import random
+import logging
 from model.HumidityModel import HumidityModel
+
+logger = logging.getLogger(__name__)
 
 def run():
 	if os.environ.get("DEVELOPMENT") == "1":
@@ -17,7 +20,7 @@ def mockRun():
 		newReading = HumidityModel(None, None, value)
 
 		# Place in database
-		print("Generating mock data for humidity sensor with value: "+str(value))
+		logger.info("Generating mock data for humidity sensor with value: "+str(value))
 		newReading.post()
 
 		time.sleep(5)
