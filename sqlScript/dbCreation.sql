@@ -32,3 +32,17 @@ create table if not exists tbl_pressure(
 	fld_value decimal(5,1) not null,
 	primary key(fld_pk_id)
 );
+
+#Events event runner must be configured to run
+DELIMITER !!
+create event if not exists event_cleaning
+on schedule every 1 minute
+on completion preserve
+do
+begin
+  delete from tbl_temperature where datediff(now(),fld_time) > 365;
+  delete from tbl_humidity where datediff(now(),fld_time) > 365;
+  delete from tbl_co2 where datediff(now(),fld_time) > 365;
+  delete from tbl_pressure where datediff(now(),fld_time) > 365;
+end!!
+DELIMITER ;
