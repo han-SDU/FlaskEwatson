@@ -18,7 +18,7 @@ def main(argv):
 	parser = argparse.ArgumentParser()
 
 	parser.add_argument("-d","--development", help="Sets runtime enviroment",action="store_true", dest="development")
-	parser.add_argument("-cll","--consolLoglevel", help="Sets verbosity of consol logging" ,choices=["DEBUG","INFO","WARNING","ERROR","CRITICAL"],default="WARNING",action="store",dest="consolLogLevel")
+	parser.add_argument("-cll","--consolLoglevel", help="Sets verbosity of consol logging" ,choices=["DEBUG","INFO","WARNING","ERROR","CRITICAL"],default="INFO",action="store",dest="consolLogLevel")
 	parser.add_argument("-fll","--fileLoglevel", help="Sets verbosity of file logging" ,choices=["DEBUG","INFO","WARNING","ERROR","CRITICAL"],default="WARNING",action="store",dest="fileLogLevel")
 
 	args = parser.parse_args()
@@ -46,6 +46,10 @@ def main(argv):
 		if args.development == True:
 			logging.info("Application started in DEVELOPMENT mode")
 			os.environ["DEVELOPMENT"]="1"
+
+		# Echo other configs
+		logging.info("Consol log level: " + args.consolLogLevel)
+		logging.info("File log level: " + args.fileLogLevel)
 
 		# Sensor related start up
 		logging.info('Starting Temperature Sensor')

@@ -1,5 +1,7 @@
 import mariadb
+import logging
 
+logging.getLogger(__name__)
 
 class ConnectionService:
 	@staticmethod
@@ -10,4 +12,5 @@ class ConnectionService:
 		host="localhost",
 		database="db_sensor"
 		)
+		logging.debug("Connecting to database")
 		return conn
