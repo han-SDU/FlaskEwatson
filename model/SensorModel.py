@@ -195,3 +195,30 @@ class SensorModel():
 		# Clean and return
 		return returnObj
 
+	@staticmethod
+	def delete_all():
+		# Init
+		returnValue = True
+
+		# Execution
+		PressureModel.delete_all()
+		HumidityModel.delete_all()
+		CO2Model.delete_all()
+		TemperatureModel.delete_all()
+
+		# Clean and return
+		return returnValue
+
+	@staticmethod
+	def delete_by_range(start,end):
+		# Init
+		returnValue = True
+
+		# Execution
+		PressureModel.delte_by_range(start,end)
+		HumidityModel.delte_by_range(start,end)
+		CO2Model.delete_by_range(start,end)
+		TemperatureModel.delete_by_range(start,end)
+
+		# Clean and return
+		return returnValue

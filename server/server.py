@@ -20,9 +20,17 @@ from server.api import pressures
 from server.api import sensors
 
 # Error Handlers for app
+@app.errorhandler(403)
+def handler_403(e):
+	return res(403, error=str(e), time=datetime.utcnow())
+
 @app.errorhandler(404)
 def handler_404(e):
 	return res(404, error=str(e), time=datetime.utcnow())
+
+@app.errorhandler(405)
+def handler_405(e):
+	return res(405, error=str(e), time=datetime.utcnow())
 
 @app.errorhandler(500)
 def handler_500(e):

@@ -51,9 +51,33 @@ class TemperatureModel():
 		return json
 
 	@staticmethod
-	def delete(id):
-		# Not needing this implementation
-		pass
+	def delete_all():
+		# Init
+		returnValue = True
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
+
+		# Execution
+		cur.execute("Delete from tbl_temperature")
+		conn.commit()
+
+		# Clean and return
+		conn.close()
+		return returnValue
+
+	@staticmethod
+	def delete_by_range(start,end):
+		# Init
+		returnValue = True
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
+
+		# Execution
+		cur.execute('Delete from tbl_temperature where fld_time>=? and fld_time<=?', (start,end,))
+		conn.commit()
+
+		# Clean and return
+		conn.close()
 
 	@staticmethod
 	def get_by_id(id):

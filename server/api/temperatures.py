@@ -127,3 +127,45 @@ def temperatures_get_average_in_range():
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
+
+@app.route("/temperatures/reset", methods=["DELETE"])
+def temperatures_reset():
+	logging.debug("Recived request /temperatures/reset")
+	startTime = time.monotonic()
+	try:
+		# Requires a simple pw
+		pw = req.args.get("pw")
+		if pw != "A7G2V9":
+			abort(403)
+
+		TemperatureModel.delete_all()
+		elapsedTime = time.monotonic() - startTime
+		logging.debug("temperature reset request time: " + str(round(elapsedTime,5))+ " seconds")
+		return res(204, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
+
+@app.route('/temperatures/reset/range', methods=['DELETE'])
+def temperatures_reset_in_range():
+	logging.debug("Recived request /temperatures/reset/range")
+	startTime = time.monotonic()
+	try:
+		# Requires a simple pw
+		pw = req.args.get("pw")
+		if pw != "A7G2V9":
+			abort(403)
+
+		start = req.args.get('start')
+		if start is None:
+			start = '2020-01-01T00:00:00'
+
+		end = req.args.get('end')
+		if end is None:
+			end = datetime.utcnow()
+
+		TemperatureModel.delete_by_range(start,end)
+		elapsedTime = time.monotonic() - startTime
+		logging.debug("temperature reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
+		return res(204, time=datetime.utcnow())
+	except mariadb.Error as e:
+		abort(500, str(e))
