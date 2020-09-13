@@ -1,212 +1,259 @@
+import logging
 from model.connectionService import ConnectionService
-import socket
+
+logging.getLogger(__name__)
+
 
 class PressureModel():
-	def __init__(self,id,time,value):
-		self.id = id
-		self.time = time
-		self.value = value
+    def __init__(self, id, time, value):
+        self.id = id
+        self.time = time
+        self.value = value
 
-	def post(self):
-		# Init
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+    def post(self):
+        # Init
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Execution
-		cur.execute('Insert into tbl_pressure(fld_time,fld_value) values (NOW(),?)',(self.value,))
-		conn.commit()
+        # Execution
+        logging.debug('Starting insert query')
+        cur.execute(
+            'Insert into tbl_pressure(fld_time,fld_value) values (NOW(),?)', (self.value,))
 
-		# Update this Object with
-		self.id = cur.lastrowid
-		self.time = PressureModel.get_by_id(self.id).time
+        logging.debug('Commiting insert changes')
+        conn.commit()
 
-		# Clean and return
-		conn.close()
-		return self.id
+        # Update this Object with
+        self.id = cur.lastrowid
+        self.time = PressureModel.get_by_id(self.id).time
+        logging.debug('Insert created row with id: ' + str(self.id))
 
-	def put(self):
-		# Not needing this implementation
-		pass
+        # Clean and return
+        logging.debug('Closing connection')
+        conn.close()
 
-	def to_json(self):
-		data = {
-			'type': 'Pressure sensor reading',
-			'id': self.id,
-			'attributes': {
-				'value': str(self.value),
-				'readingTime': self.time,
-				'readingUnit': 'hPa'
-				}
-			}
-		return data
+        return self.id
 
-	@staticmethod
-	def average_json(avgDecimal):
-		json = {
-			'type': 'Pressure average',
-			'attributes': {
-					'average': str(avgDecimal),
-					'readingUnit' : 'hPa'
-					}
-			}
-		return json
+    def to_json(self):
+        logging.debug('Formatting PressureModel to JSON')
+        data = {
+            'type': 'Pressure sensor reading',
+            'id': self.id,
+            'attributes': {
+                    'value': str(self.value),
+                    'readingTime': self.time,
+                'readingUnit': 'hPa'
+            }
+        }
+        return data
 
-	@staticmethod
-	def delete_all():
-		# Init
-		returnValue = True
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+    @staticmethod
+    def average_json(avgDecimal):
+        logging.debug('Formatting CO2Model to average JSON')
+        json = {
+            'type': 'Pressure average',
+            'attributes': {
+                    'average': str(avgDecimal),
+                    'readingUnit': 'hPa'
+            }
+        }
+        return json
 
-		# Execution
-		cur.execute("Delete from tbl_pressure")
-		conn.commit()
+    @staticmethod
+    def delete_all():
+        # Init
+        returnValue = True
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Clean and return
-		conn.close()
-		return returnValue
+        # Execution
+        logging.debug('Starting delete query')
+        cur.execute("Delete from tbl_pressure")
 
-	@staticmethod
-	def delete_by_range(start,end):
-		# Init
-		returnValue = True
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        logging.debug('Commiting delete changes')
+        conn.commit()
 
-		# Execution
-		cur.execute('Delete from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
-		conn.commit()
+        # Clean and return
+        logging.debug('Closing connection')
+        conn.close()
 
-		# Clean and return
-		conn.close()
+        return returnValue
 
-	@staticmethod
-	def get_by_id(id):
-		# Init
-		returnValue = None
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+    @staticmethod
+    def delete_by_range(start, end):
+        # Init
+        returnValue = True
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Execution
-		cur.execute('Select * from tbl_pressure where fld_pk_id=?', (id,))
+        # Execution
+        logging.debug('Starting delete query')
+        cur.execute(
+            'Delete from tbl_pressure where fld_time>=? and fld_time<=?', (start, end,))
 
-		# Formatting of return data
-		for id,time,value in cur:
-			returnValue = PressureModel(id,time,value)
+        logging.debug('Commiting delete changes')
+        conn.commit()
 
-		# Clean and return
-		conn.close()
-		return returnValue
+        # Clean and return
+        logging.debug('Closing connection')
+        conn.close()
 
-	@staticmethod
-	def get_all():
-		# Init
-		returnValue = []
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        return returnValue
 
-		# Execution
-		cur.execute('Select * from tbl_pressure')
+    @staticmethod
+    def get_by_id(id):
+        # Init
+        returnValue = None
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Formatting of return data
-		for id,time,value in cur:
-			temp = PressureModel(id,time,value)
-			returnValue.append(temp)
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute('Select * from tbl_pressure where fld_pk_id=?', (id,))
 
-		# Clean and return
-		conn.close()
-		return returnValue
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for id, time, value in cur:
+            returnValue = PressureModel(id, time, value)
 
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
 
-	@staticmethod
-	def get_by_search(start,end):
-		# Init
-		returnValue = []
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        return returnValue
 
-		# Execution
-		cur.execute('Select * from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
+    @staticmethod
+    def get_all():
+        # Init
+        returnValue = []
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Formatting of return data
-		for id,time,value in cur:
-			temp = PressureModel(id,time,value)
-			returnValue.append(temp)
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute('Select * from tbl_pressure')
 
-		# Clean and return
-		conn.close()
-		return returnValue
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for id, time, value in cur:
+            temp = PressureModel(id, time, value)
+            returnValue.append(temp)
 
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
 
-	@staticmethod
-	def get_oldest():
-		# Init
-		returnValue = None
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        return returnValue
 
-		# Execution
-		cur.execute('Select * from tbl_pressure order by fld_time asc limit 1')
+    @staticmethod
+    def get_by_search(start, end):
+        # Init
+        returnValue = []
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Formatting of return data
-		for id,time,value in cur:
-			returnValue = PressureModel(id,time,value)
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute(
+            'Select * from tbl_pressure where fld_time>=? and fld_time<=?', (start, end,))
 
-		# Clean and return
-		conn.close()
-		return returnValue
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for id, time, value in cur:
+            temp = PressureModel(id, time, value)
+            returnValue.append(temp)
 
-	@staticmethod
-	def get_newest():
-		# Init
-		returnValue = None
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
 
-		# Execution
-		cur.execute('Select * from tbl_pressure order by fld_time desc limit 1')
+        return returnValue
 
-		# Formatting of return data
-		for id,time,value in cur:
-			returnValue = PressureModel(id,time,value)
+    @staticmethod
+    def get_oldest():
+        # Init
+        returnValue = None
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
-		# Clean and return
-		conn.close()
-		return returnValue
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute('Select * from tbl_pressure order by fld_time asc limit 1')
 
-	@staticmethod
-	def get_average():
-		# Init
-		returnValue = None
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for id, time, value in cur:
+            returnValue = PressureModel(id, time, value)
 
-		# Execution
-		cur.execute('Select AVG(fld_value) from tbl_pressure')
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
 
-		# Formatting of return data
-		for c in cur:
-			returnValue = c[0] #Average
+        return returnValue
 
-		# Clean and return
-		conn.close()
-		return returnValue
+    @staticmethod
+    def get_newest():
+        # Init
+        returnValue = None
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
 
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute('Select * from tbl_pressure order by fld_time desc limit 1')
 
-	@staticmethod
-	def get_average_by_range(start,end):
-		# Init
-		returnValue = None
-		conn = ConnectionService.get_connection()
-		cur = conn.cursor()
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for id, time, value in cur:
+            returnValue = PressureModel(id, time, value)
 
-		# Execution
-		cur.execute('Select AVG(fld_value) from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
 
-		# Formatting of return data
-		for c in cur:
-			returnValue = c[0] #Average
+        return returnValue
 
-		# Clean and return
-		conn.close()
-		return returnValue
+    @staticmethod
+    def get_average():
+        # Init
+        returnValue = None
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
+
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute('Select AVG(fld_value) from tbl_pressure')
+
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for c in cur:
+            returnValue = c[0]  # Average
+
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
+
+        return returnValue
+
+    @staticmethod
+    def get_average_by_range(start, end):
+        # Init
+        returnValue = None
+        conn = ConnectionService.get_connection()
+        cur = conn.cursor()
+
+        # Execution
+        logging.debug('Starting select query')
+        cur.execute(
+            'Select AVG(fld_value) from tbl_pressure where fld_time>=? and fld_time<=?', (start, end,))
+
+        # Formatting of return data
+        logging.debug('Starting formatting to objects')
+        for c in cur:
+            returnValue = c[0]  # Average
+
+        # Clean and return
+            logging.debug('Closing connection')
+        conn.close()
+
+        return returnValue
