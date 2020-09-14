@@ -12,7 +12,7 @@ class CO2Model():
 		cur = conn.cursor()
 
 		# Execution
-		cur.execute('Insert into tbl_co2(fld_time,fld_value) values (NOW(),?)',(self.value,))
+		cur.execute('Insert into tbl_co2(fld_time,fld_value) values (UTC_TIMESTAMP(),?)',(self.value,))
 		conn.commit()
 
 		# Update this Object with
@@ -33,7 +33,7 @@ class CO2Model():
 			'id': self.id,
 			'attributes': {
 				'value': str(self.value),
-				'readingTime': self.time,
+				'readingTimeUTC': self.time,
 				'readingUnit': 'ppm'
 				}
 			}

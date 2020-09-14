@@ -13,7 +13,7 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
-		cur.execute('Insert into tbl_pressure(fld_time,fld_value) values (NOW(),?)',(self.value,))
+		cur.execute('Insert into tbl_pressure(fld_time,fld_value) values (UTC_TIMESTAMP(),?)',(self.value,))
 		conn.commit()
 
 		# Update this Object with
@@ -34,7 +34,7 @@ class PressureModel():
 			'id': self.id,
 			'attributes': {
 				'value': str(self.value),
-				'readingTime': self.time,
+				'readingTimeUTC': self.time,
 				'readingUnit': 'hPa'
 				}
 			}
