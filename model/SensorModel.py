@@ -2,6 +2,9 @@ from model.PressureModel import PressureModel
 from model.HumidityModel import HumidityModel
 from model.CO2Model import CO2Model
 from model.TemperatureModel import TemperatureModel
+import logging
+
+logging.getLogger(__name__)
 
 class SensorModel():
 	def __init__(self,pressures,humidities,co2,temperatures):
@@ -52,6 +55,7 @@ class SensorModel():
 		temperatureJson = self.temperatures.to_json()
 
 		# Return data
+		logging.debug("Formatting SensorModel to json")
 		data = {
 			'type': 'All sensor readings',
 			'attributes': {
@@ -64,6 +68,7 @@ class SensorModel():
 		return data
 
 	def to_average_json(self):
+		logging.debug("Formatting SensorModel to average json")
 		json = {
 			'type': 'All sensor average',
 			'attributes': {

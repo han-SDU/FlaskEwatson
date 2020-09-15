@@ -19,12 +19,13 @@ def main(argv):
     # Parsing argv
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-d", "--development", help="Sets runtime enviroment",
+    parser.add_argument("-d", "--development", help="Sets runtime environment",
                         action="store_true", dest="development")
     parser.add_argument("-cll", "--consolLoglevel", help="Sets verbosity of consol logging", choices=[
                         "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO", action="store", dest="consolLogLevel")
     parser.add_argument("-fll", "--fileLoglevel", help="Sets verbosity of file logging", choices=[
                         "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="WARNING", action="store", dest="fileLogLevel")
+    parser.add_argument("-fo", "--fileOutput", help="File name of logging file", type=str, default="logging", action="store", dest="logFileName")
 
     args = parser.parse_args()
 
@@ -45,7 +46,7 @@ def main(argv):
         if not os.path.exists('logging'):
             os.makedirs('logging')
         fileLogger = handlers.RotatingFileHandler(
-            filename="logging/logging.log", maxBytes=10*1024*1024, backupCount=5)
+            filename="logging/"+args.logFileName+".log", maxBytes=10*1024*1024, backupCount=5)
         fileLogger.setLevel(args.fileLogLevel)
         fileLogger.setFormatter(logFormatter)
         rootLogger.addHandler(fileLogger)
@@ -59,6 +60,7 @@ def main(argv):
         # Echo other configs
         logging.info("Consol log level: " + args.consolLogLevel)
         logging.info("File log level: " + args.fileLogLevel)
+        logging.info("File logging output: logging/"+args.logFileName+".log")
 
         # Sensor related start up
         logging.info('Starting Temperature Sensor')

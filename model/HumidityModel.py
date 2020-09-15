@@ -1,4 +1,7 @@
 from model.connectionService import ConnectionService
+import logging
+
+logging.getLogger(__name__)
 
 class HumidityModel():
 	def __init__(self,id,time,value):
@@ -12,22 +15,25 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting insert")
 		cur.execute('Insert into tbl_humidity(fld_time,fld_value) values (UTC_TIMESTAMP(),?)',(self.value,))
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Update this Object with
 		self.id = cur.lastrowid
 		self.time = HumidityModel.get_by_id(self.id).time
+		logging.debug("Generated item has id: "+ str(self.id))
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return self.id
 
-	def put(self):
-		# Not needing this implementation
-		pass
-
 	def to_json(self):
+		logging.debug("Formatting HumidityModel to json")
 		data = {
 			'type': 'Humidity sensor reading',
 			'id': self.id,
@@ -41,6 +47,7 @@ class HumidityModel():
 
 	@staticmethod
 	def average_json(avgDecimal):
+		logging.debug("Formatting HumidityModel to average json")
 		json = {
 			'type': 'Humidity average',
 			'attributes': {
@@ -58,11 +65,16 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting delete")
 		cur.execute("Delete from tbl_humidity")
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -73,11 +85,18 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting delete")
 		cur.execute('Delete from tbl_humidity where fld_time>=? and fld_time<=?', (start,end,))
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
+		return returnValue
+
 
 	@staticmethod
 	def get_by_id(id):
@@ -87,14 +106,18 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_humidity where fld_pk_id=?', (id,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = HumidityModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+		
 		return returnValue
 
 	@staticmethod
@@ -105,15 +128,19 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_humidity')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			temp = HumidityModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -125,15 +152,19 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_humidity where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			temp = HumidityModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -145,14 +176,18 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_humidity order by fld_time asc limit 1')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = HumidityModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -163,14 +198,18 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_humidity order by fld_time desc limit 1')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = HumidityModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -181,13 +220,18 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select AVG(fld_value) from tbl_humidity')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for c in cur:
 			returnValue = c[0] #Average
 
 		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
+
 		return returnValue
 
 
@@ -199,12 +243,16 @@ class HumidityModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select AVG(fld_value) from tbl_humidity where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for c in cur:
 			returnValue = c[0] #Average
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+		
 		return returnValue

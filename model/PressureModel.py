@@ -1,5 +1,7 @@
 from model.connectionService import ConnectionService
-import socket
+import logging
+
+logging.getLogger(__name__)
 
 class PressureModel():
 	def __init__(self,id,time,value):
@@ -13,22 +15,25 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting insert")
 		cur.execute('Insert into tbl_pressure(fld_time,fld_value) values (UTC_TIMESTAMP(),?)',(self.value,))
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Update this Object with
 		self.id = cur.lastrowid
 		self.time = PressureModel.get_by_id(self.id).time
+		logging.debug("Generated item has id: "+ str(self.id))
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return self.id
 
-	def put(self):
-		# Not needing this implementation
-		pass
-
 	def to_json(self):
+		logging.debug("Formatting PressureModel to json")
 		data = {
 			'type': 'Pressure sensor reading',
 			'id': self.id,
@@ -42,6 +47,7 @@ class PressureModel():
 
 	@staticmethod
 	def average_json(avgDecimal):
+		logging.debug("Formatting PressureModel to average json")
 		json = {
 			'type': 'Pressure average',
 			'attributes': {
@@ -59,11 +65,16 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting delete")
 		cur.execute("Delete from tbl_pressure")
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -74,11 +85,17 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting delete")
 		cur.execute('Delete from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
+		return returnValue
 
 	@staticmethod
 	def get_by_id(id):
@@ -88,14 +105,18 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_pressure where fld_pk_id=?', (id,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = PressureModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -106,15 +127,19 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_pressure')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			temp = PressureModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -126,15 +151,19 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			temp = PressureModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -146,14 +175,18 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_pressure order by fld_time asc limit 1')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = PressureModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -164,14 +197,18 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_pressure order by fld_time desc limit 1')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = PressureModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -182,14 +219,18 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select AVG(fld_value) from tbl_pressure')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for c in cur:
 			returnValue = c[0] #Average
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -201,12 +242,16 @@ class PressureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select AVG(fld_value) from tbl_pressure where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for c in cur:
 			returnValue = c[0] #Average
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+		
 		return returnValue

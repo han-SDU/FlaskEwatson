@@ -1,4 +1,7 @@
 from model.connectionService import ConnectionService
+import logging
+
+logging.getLogger(__name__)
 
 class TemperatureModel():
 	def __init__(self,id,time,value):
@@ -12,22 +15,25 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting insert")
 		cur.execute('Insert into tbl_temperature(fld_time,fld_value) values (UTC_TIMESTAMP(),?)',(self.value,))
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Update this Object with
 		self.id = cur.lastrowid
 		self.time = TemperatureModel.get_by_id(self.id).time
+		logging.debug("Generated item has id: "+ str(self.id))
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return self.id
 
-	def put(self):
-		# Not needing this implementation
-		pass
-
 	def to_json(self):
+		logging.debug("Formatting TemperatureModel to json")
 		data = {
 			'type': 'Temperature sensor reading',
 			'id': self.id,
@@ -41,6 +47,7 @@ class TemperatureModel():
 
 	@staticmethod
 	def average_json(avgDecimal):
+		logging.debug("Formatting TemperatureModel to average json")
 		json = {
 			'type': 'Temperature average',
 			'attributes': {
@@ -58,11 +65,16 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting delete")
 		cur.execute("Delete from tbl_temperature")
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -73,11 +85,17 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting delete")
 		cur.execute('Delete from tbl_temperature where fld_time>=? and fld_time<=?', (start,end,))
+
+		logging.debug("Committing changes")
 		conn.commit()
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
+		return returnValue
 
 	@staticmethod
 	def get_by_id(id):
@@ -87,14 +105,18 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_temperature where fld_pk_id=?', (id,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = TemperatureModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -105,15 +127,19 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_temperature')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			temp = TemperatureModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -125,15 +151,19 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_temperature where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			temp = TemperatureModel(id,time,value)
 			returnValue.append(temp)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -144,14 +174,18 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_temperature order by fld_time asc limit 1')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = TemperatureModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -162,14 +196,18 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select * from tbl_temperature order by fld_time desc limit 1')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for id,time,value in cur:
 			returnValue = TemperatureModel(id,time,value)
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 	@staticmethod
@@ -180,14 +218,18 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select AVG(fld_value) from tbl_temperature')
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for c in cur:
 			returnValue = c[0] #Average
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+
 		return returnValue
 
 
@@ -199,12 +241,16 @@ class TemperatureModel():
 		cur = conn.cursor()
 
 		# Execution
+		logging.debug("Starting select")
 		cur.execute('Select AVG(fld_value) from tbl_temperature where fld_time>=? and fld_time<=?', (start,end,))
 
 		# Formatting of return data
+		logging.debug("Formatting query data to objects")
 		for c in cur:
 			returnValue = c[0] #Average
 
 		# Clean and return
+		logging.debug("Closing connection")
 		conn.close()
+		
 		return returnValue
