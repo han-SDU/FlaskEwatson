@@ -50,4 +50,4 @@ def handler_default(e):
 #Start up
 def run():
 	#config for running dev, havent looked at prod server yet
-	app.run(debug=False, host='0.0.0.0', port=5000)
+	app.run(debug=False, host='0.0.0.0', port=5000, ssl_context="adhoc")
