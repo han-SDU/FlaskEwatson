@@ -9,7 +9,7 @@ from flask_cors import CORS
 import traceback
 
 app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False
+#app.config['JSON_SORT_KEYS'] = False
 FlaskJSON(app)
 CORS(app)
 

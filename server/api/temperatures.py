@@ -3,15 +3,19 @@ from server.server import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
+from flask import Response
+from flask import jsonify
+from flask import stream_with_context
 from datetime import datetime
 from datetime import timezone
 from model.TemperatureModel import TemperatureModel
 import logging
 import time
 import mariadb
+import json
 
 logging.getLogger(__name__)
-
+"""
 @app.route('/temperatures', methods=['GET'])
 def temperatures_get_all():
 	logging.debug("Received request /temperatures")
@@ -26,6 +30,26 @@ def temperatures_get_all():
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
+"""
+
+@app.route('/temperatures', methods=['GET'])
+def temperatures_get_all():
+	logging.debug("Received request /temperatures")
+	startTime = time.monotonic()
+	try:
+#		dataArray = []
+#		temperatureArray = TemperatureModel.get_all()
+#		for tempModel in temperatureArray:
+#			dataArray.append(tempModel.to_json())
+		elapsedTime = time.monotonic() - startTime
+		logging.debug("temperature get all request time: " + str(round(elapsedTime,5))+ " seconds")
+		def generate():
+			for row in TemperatureModel.get_all():
+				yield str(row.to_json())
+
+		return Response(stream_with_context(generate()))
+	except mariadb.Error as e:
+		abort(500, str(e))
 
 @app.route('/temperatures/<int:id>', methods=['GET'])
 def temperatures_get_by_id(id):
@@ -38,7 +62,7 @@ def temperatures_get_by_id(id):
 		data = returnValue.to_json()
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature get by id request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=data, timeUTC=datetime.utcnow())
+		return res(200, data=jsonify(TemperatureModel.get_by_id(id)), timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 

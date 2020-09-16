@@ -43,7 +43,7 @@ class TemperatureModel():
 				}
 			}
 		return data
-
+		
 	@staticmethod
 	def average_json(avgDecimal):
 		json = {
