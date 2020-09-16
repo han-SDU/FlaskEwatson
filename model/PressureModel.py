@@ -33,7 +33,6 @@ class PressureModel():
 		return self.id
 
 	def to_json(self):
-		logging.debug("Formatting PressureModel to json")
 		data = {
 			'type': 'Pressure sensor reading',
 			'id': self.id,
@@ -47,7 +46,6 @@ class PressureModel():
 
 	@staticmethod
 	def average_json(avgDecimal):
-		logging.debug("Formatting PressureModel to average json")
 		json = {
 			'type': 'Pressure average',
 			'attributes': {

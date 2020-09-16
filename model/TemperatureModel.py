@@ -33,7 +33,6 @@ class TemperatureModel():
 		return self.id
 
 	def to_json(self):
-		logging.debug("Formatting TemperatureModel to json")
 		data = {
 			'type': 'Temperature sensor reading',
 			'id': self.id,
@@ -47,7 +46,6 @@ class TemperatureModel():
 
 	@staticmethod
 	def average_json(avgDecimal):
-		logging.debug("Formatting TemperatureModel to average json")
 		json = {
 			'type': 'Temperature average',
 			'attributes': {

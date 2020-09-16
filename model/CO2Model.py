@@ -33,7 +33,6 @@ class CO2Model():
 		return self.id
 
 	def to_json(self):
-		logging.debug("Formatting CO2Model to json")
 		data = {
 			'type': 'CO2 sensor reading',
 			'id': self.id,
@@ -47,7 +46,6 @@ class CO2Model():
 
 	@staticmethod
 	def average_json(avgDecimal):
-		logging.debug("Formatting CO2Model to average json")
 		json = {
 			'type': 'CO2 average',
 			'attributes': {

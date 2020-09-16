@@ -33,7 +33,6 @@ class HumidityModel():
 		return self.id
 
 	def to_json(self):
-		logging.debug("Formatting HumidityModel to json")
 		data = {
 			'type': 'Humidity sensor reading',
 			'id': self.id,
@@ -47,7 +46,6 @@ class HumidityModel():
 
 	@staticmethod
 	def average_json(avgDecimal):
-		logging.debug("Formatting HumidityModel to average json")
 		json = {
 			'type': 'Humidity average',
 			'attributes': {
