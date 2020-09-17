@@ -6,6 +6,8 @@ from datetime import datetime
 from flask_json import FlaskJSON
 from flask_json import json_response as res
 from flask_cors import CORS
+import logging
+import time
 import traceback
 
 app = Flask(__name__)
@@ -47,8 +49,14 @@ def handler_default(e):
 	traceback.print_exc()
 	return res(500, error=str(e), time=datetime.utcnow())
 
-
+#Base base and misc routes
+#Identifier that this is the box
+@app.route('/identity', methods=['GET'])
+def base_identity():
+	logging.debug("Received request /identity")
+	return res(200, identifier="HelloSensorBox785179218796217896319", timeUTC=datetime.utcnow())
+	
 #Start up
 def run():
-	#config for running dev, havent looked at prod server yet
+	#config for running dev, haven't looked at prod server yet
 	app.run(debug=False, host='0.0.0.0', port=5000)
