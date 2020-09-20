@@ -2,6 +2,7 @@ import threading
 import sys
 import getopt
 import os
+import time
 import argparse
 import logging
 import logging.handlers as handlers
@@ -25,7 +26,8 @@ def main(argv):
                         "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO", action="store", dest="consolLogLevel")
     parser.add_argument("-fll", "--fileLoglevel", help="Sets verbosity of file logging", choices=[
                         "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="WARNING", action="store", dest="fileLogLevel")
-    parser.add_argument("-fo", "--fileOutput", help="File name of logging file", type=str, default="logging", action="store", dest="logFileName")
+    parser.add_argument("-fo", "--fileOutput", help="File name of logging file",
+                        type=str, default="logging", action="store", dest="logFileName")
 
     args = parser.parse_args()
 
@@ -92,13 +94,13 @@ def main(argv):
         serverDaemon.name = "ServerDaemon"
         serverDaemon.start()
 
-        Event().wait()
+        # Event().wait()
+        time.sleep(30)
         logging.info('Exit with ctrl-c')
     except KeyboardInterrupt as e:
         logging.info('Shutting down')
     except BaseException as e:
         logging.exception(e)
-
 
     # Add a catch all
 if __name__ == "__main__":
