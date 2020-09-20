@@ -13,7 +13,7 @@ logging.getLogger(__name__)
 
 @app.route('/pressures', methods=['GET'])
 def pressure_get_all():
-	logging.debug("Recived request /pressures")
+	logging.debug("Received request /pressures")
 	startTime = time.monotonic()
 	try:
 		dataArray = []
@@ -22,13 +22,13 @@ def pressure_get_all():
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("pressure get all request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=dataArray, time=datetime.utcnow())
+		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
 @app.route('/pressures/<int:id>', methods=['GET'])
 def pressure_get_by_id(id):
-	logging.debug("Recived request /pressures/<id>")
+	logging.debug("Received request /pressures/<id>")
 	startTime = time.monotonic()
 	try:
 		returnValue = PressureModel.get_by_id(id)
@@ -37,13 +37,13 @@ def pressure_get_by_id(id):
 		data = returnValue.to_json()
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("pressure get by id request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=data, time=datetime.utcnow())
+		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
 @app.route('/pressures/search', methods=['GET'])
 def pressure_get_by_search():
-	logging.debug("Recived request /pressures/search")
+	logging.debug("Received request /pressures/search")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -60,13 +60,13 @@ def pressure_get_by_search():
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature get all request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=dataArray, time=datetime.utcnow())
+		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
 @app.route('/pressures/oldest', methods=['GET'])
 def pressure_get_oldest():
-	logging.debug("Recived request /pressures/oldest")
+	logging.debug("Received request /pressures/oldest")
 	startTime = time.monotonic()
 	try:
 		returnValue = PressureModel.get_oldest()
@@ -75,13 +75,13 @@ def pressure_get_oldest():
 		data = returnValue.to_json()
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("pressure get oldest request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=data, time=datetime.utcnow())
+		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
 @app.route('/pressures/newest', methods=['GET'])
 def pressure_get_newest():
-	logging.debug("Recived request /pressures/newest")
+	logging.debug("Received request /pressures/newest")
 	startTime = time.monotonic()
 	try:
 		returnValue = PressureModel.get_newest()
@@ -90,26 +90,26 @@ def pressure_get_newest():
 		data = returnValue.to_json()
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("pressure get newest all request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=data, time=datetime.utcnow())
+		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
 @app.route('/pressures/average', methods=['GET'])
 def pressures_get_average():
-	logging.debug("Recived request /pressures/average")
+	logging.debug("Received request /pressures/average")
 	startTime = time.monotonic()
 	try:
 		returnValue = PressureModel.get_average()
 		data = PressureModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("pressure get average request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=data, time=datetime.utcnow())
+		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
 @app.route('/pressures/average/range', methods=['GET'])
 def pressure_get_average_in_range():
-	logging.debug("Recived request /pressures/average/range")
+	logging.debug("Received request /pressures/average/range")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -124,6 +124,6 @@ def pressure_get_average_in_range():
 		data = PressureModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("pressure get average by range all request time: " + str(round(elapsedTime,5))+ " seconds")
-		return res(200, data=data, time=datetime.utcnow())
+		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))

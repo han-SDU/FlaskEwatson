@@ -2,6 +2,9 @@ from model.PressureModel import PressureModel
 from model.HumidityModel import HumidityModel
 from model.CO2Model import CO2Model
 from model.TemperatureModel import TemperatureModel
+import logging
+
+logging.getLogger(__name__)
 
 
 class SensorModel():
@@ -53,6 +56,7 @@ class SensorModel():
         temperatureJson = self.temperatures.to_json()
 
         # Return data
+        logging.debug("Formatting SensorModel to json")
         data = {
             'type': 'All sensor readings',
             'attributes': {
@@ -65,6 +69,7 @@ class SensorModel():
         return data
 
     def to_average_json(self):
+        logging.debug("Formatting SensorModel to average json")
         json = {
             'type': 'All sensor average',
             'attributes': {
@@ -85,7 +90,7 @@ class SensorModel():
         foundCo2 = []
         foundTemperatures = []
 
-        # Execution (4 connection, could be more efficient but query time is hardly an issue)
+        # Execution (4 connection, could be more effecient but query time is hardly an issue)
         foundPressure = PressureModel.get_all()
         foundHumidities = HumidityModel.get_all()
         foundCo2 = CO2Model.get_all()
@@ -106,7 +111,7 @@ class SensorModel():
         foundCo2 = []
         foundTemperatures = []
 
-        # Execution (4 connection, could be more efficient but query time is hardly an issue)
+        # Execution (4 connection, could be more effecient but query time is hardly an issue)
         foundPressure = PressureModel.get_by_search(start, end)
         foundHumidities = HumidityModel.get_by_search(start, end)
         foundCo2 = CO2Model.get_by_search(start, end)
@@ -119,7 +124,6 @@ class SensorModel():
         # Clean and return
         return returnObj
 
-    @staticmethod
     def get_oldest():
         # init
         foundPressure = None
@@ -127,7 +131,7 @@ class SensorModel():
         foundCo2 = None
         foundTemperatures = None
 
-        # Execution (4 connection, could be more efficient but query time is hardly an issue)
+        # Execution (4 connection, could be more effecient but query time is hardly an issue)
         foundPressure = PressureModel.get_oldest()
         foundHumidities = HumidityModel.get_oldest()
         foundCo2 = CO2Model.get_oldest()
@@ -140,7 +144,6 @@ class SensorModel():
         # Clean and return
         return returnObj
 
-    @staticmethod
     def get_newest():
         # init
         foundPressure = None
@@ -148,7 +151,7 @@ class SensorModel():
         foundCo2 = None
         foundTemperatures = None
 
-        # Execution (4 connection, could be more efficient but query time is hardly an issue)
+        # Execution (4 connection, could be more effecient but query time is hardly an issue)
         foundPressure = PressureModel.get_newest()
         foundHumidities = HumidityModel.get_newest()
         foundCo2 = CO2Model.get_newest()
@@ -161,7 +164,6 @@ class SensorModel():
         # Clean and return
         return returnObj
 
-    @staticmethod
     def get_average():
         # init
         foundPressure = None
@@ -169,7 +171,7 @@ class SensorModel():
         foundCo2 = None
         foundTemperatures = None
 
-        # Execution (4 connection, could be more efficient but query time is hardly an issue)
+        # Execution (4 connection, could be more effecient but query time is hardly an issue)
         foundPressure = PressureModel.get_average()
         foundHumidities = HumidityModel.get_average()
         foundCo2 = CO2Model.get_average()
@@ -182,7 +184,6 @@ class SensorModel():
         # Clean and return
         return returnObj
 
-    @staticmethod
     def get_average_by_range(start, end):
         # init
         foundPressure = None
@@ -190,7 +191,7 @@ class SensorModel():
         foundCo2 = None
         foundTemperatures = None
 
-        # Execution (4 connection, could be more efficient but query time is hardly an issue)
+        # Execution (4 connection, could be more effecient but query time is hardly an issue)
         foundPressure = PressureModel.get_average_by_range(start, end)
         foundHumidities = HumidityModel.get_average_by_range(start, end)
         foundCo2 = CO2Model.get_average_by_range(start, end)
@@ -223,8 +224,8 @@ class SensorModel():
         returnValue = True
 
         # Execution
-        PressureModel.delete_by_range(start, end)
-        HumidityModel.delete_by_range(start, end)
+        PressureModel.delte_by_range(start, end)
+        HumidityModel.delte_by_range(start, end)
         CO2Model.delete_by_range(start, end)
         TemperatureModel.delete_by_range(start, end)
 

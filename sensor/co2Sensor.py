@@ -5,7 +5,7 @@ import os
 import logging
 from model.CO2Model import CO2Model
 
-logger = logging.getLogger(__name__)
+logging.getLogger(__name__)
 
 
 def run():
@@ -17,16 +17,19 @@ def run():
 
 def mockRun():
     while True:
-        # Create Mock data
-        value = random.uniform(0, 69)
-        newReading = CO2Model(None, None, value)
+        try:
+            # Create Mock data
+            value = random.uniform(0, 69)
+            newReading = CO2Model(None, None, value)
 
-        # Insert into db
-        logger.info(
-            "Generating mock data for co2 sensor with value: "+str(value))
-        newReading.post()
+            # Insert into db
+            logging.info(
+                "Generating mock data for co2 sensor with value: "+str(value))
+            newReading.post()
 
-        time.sleep(5)
+            time.sleep(5)
+        except BaseException as e:
+            logging.exception(e)
 
 
 def collectData():

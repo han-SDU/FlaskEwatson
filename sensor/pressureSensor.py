@@ -5,7 +5,7 @@ import random
 import logging
 from model.PressureModel import PressureModel
 
-logger = logging.getLogger(__name__)
+logging.getLogger(__name__)
 
 def run():
 	if os.environ.get("DEVELOPMENT") == "1":
@@ -15,15 +15,19 @@ def run():
 
 def mockRun():
 	while True:
-		# Mock data creation
-		value = random.uniform(0,100)
-		newReading = PressureModel(None,None,value)
+		try:
+			# Mock data creation
+			value = random.uniform(0,100)
+			newReading = PressureModel(None,None,value)
 
-		# Insert
-		logger.info("Generating mock data for pressure sensor with value: "+str(value))
-		newReading.post()
+			# Insert
+			logging.info("Generating mock data for pressure sensor with value: "+str(value))
+			newReading.post()
 
-		time.sleep(5)
+			time.sleep(5)
+		except BaseException as e:
+			logging.exception(e)
+		
 
 def collectData():
 	raise NotImplementedError
