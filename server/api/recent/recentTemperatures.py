@@ -5,7 +5,7 @@ from flask import request as req
 from flask import abort
 from datetime import datetime
 from datetime import timezone
-from model.recent.RecentSensorModel import RecentSensorModel
+from model.recent.RecentTemperatureModel import RecentTemperatureModel
 import logging
 import time
 import mariadb
@@ -32,7 +32,7 @@ def recent_temperatures_get_by_id(id):
 	logging.debug("Received request /recent/temperatures/<id>")
 	startTime = time.monotonic()
 	try:
-		returnValue = RecentSensorModel.get_by_id(id)
+		returnValue = RecentTemperatureModel.get_by_id(id)
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -56,7 +56,7 @@ def recent_temperatures_get_by_search():
 			end = datetime.utcnow()
 
 		dataArray = []
-		temperatureArray = RecentSensorModel.get_by_search(start,end)
+		temperatureArray = RecentTemperatureModel.get_by_search(start,end)
 		for tempModel in temperatureArray:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -70,7 +70,7 @@ def recent_temperatures_get_oldest():
 	logging.debug("Received request /recent/temperatures/oldest")
 	startTime = time.monotonic()
 	try:
-		returnValue = RecentSensorModel.get_oldest()
+		returnValue = RecentTemperatureModel.get_oldest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -85,7 +85,7 @@ def recent_temperatures_get_newest():
 	logging.debug("Received request /recent/temperatures/newest")
 	startTime = time.monotonic()
 	try:
-		returnValue = RecentSensorModel.get_newest()
+		returnValue = RecentTemperatureModel.get_newest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -100,8 +100,8 @@ def recent_temperatures_get_average():
 	logging.debug("Received request /recent/temperatures/average")
 	startTime = time.monotonic()
 	try:
-		returnValue = RecentSensorModel.get_average()
-		data = RecentSensorModel.average_json(returnValue)
+		returnValue = RecentTemperatureModel.get_average()
+		data = RecentTemperatureModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
@@ -121,8 +121,8 @@ def recent_temperatures_get_average_in_range():
 		if end is None:
 			end = datetime.utcnow()
 
-		returnValue = RecentSensorModel.get_average_by_range(start,end)
-		data = RecentSensorModel.average_json(returnValue)
+		returnValue = RecentTemperatureModel.get_average_by_range(start,end)
+		data = RecentTemperatureModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature get average in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
@@ -139,7 +139,7 @@ def recent_temperatures_reset():
 		if pw != "A7G2V9":
 			abort(403)
 
-		RecentSensorModel.delete_all()
+		RecentTemperatureModel.delete_all()
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
@@ -170,3 +170,4 @@ def recent_temperatures_reset_in_range():
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
+

@@ -84,10 +84,10 @@ on schedule every 1 day
 on completion preserve
 do
 begin
-delete from tbl_historic_temperature where datediff(utc_timeStamp(),fld_start) > 365;
-delete from tbl_historic_humidity where datediff(utc_timeStamp(),fld_start) > 365;
-delete from tbl_historic_co2 where datediff(utc_timeStamp(),fld_start) > 365;
-delete from tbl_historic_pressure where datediff(utc_timeStamp(),fld_start) > 365;
+delete from tbl_historic_temperature where datediff(utc_timeStamp(),fld_start_time) > 365;
+delete from tbl_historic_humidity where datediff(utc_timeStamp(),fld_start_time) > 365;
+delete from tbl_historic_co2 where datediff(utc_timeStamp(),fld_start_time) > 365;
+delete from tbl_historic_pressure where datediff(utc_timeStamp(),fld_start_time) > 365;
 end!!
 DELIMITER ;
 

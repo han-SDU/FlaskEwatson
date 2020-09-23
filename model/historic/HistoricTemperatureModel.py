@@ -4,18 +4,22 @@ from model.connectionService import ConnectionService
 logging.getLogger(__name__)
 
 class HistoricTemperatureModel():
-    def __init__(self, id, time, value):
+    def __init__(self, id, startTime, endTime, value):
         self.id = id
-        self.time = time
+        self.startTime = startTime
+        self.endTime = endTime
         self.value = value
 
     def to_json(self):
         data = {
-            'type': 'Historic temperature sensor reading',
+            'type': 'Historic CO2 sensor reading',
             'id': self.id,
             'attributes': {
-                    'value': str(self.value),
-                    'readingTimeUTC': self.time,
+                'averageValue': str(self.value),
+                'readingTimePeriod': {
+                    'startUTC': self.startTime,
+                    'endUTC': self.endTime,
+                },
                 'readingUnit': 'celsius'
             }
         }
@@ -86,8 +90,8 @@ class HistoricTemperatureModel():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            returnValue = HistoricTemperatureModel(id, time, value)
+        for id, start, end, value in cur:
+            returnValue = HistoricTemperatureModel(id, start, end, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -108,8 +112,8 @@ class HistoricTemperatureModel():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            temp = HistoricTemperatureModel(id, time, value)
+        for id, start, end,  value in cur:
+            temp = HistoricTemperatureModel(id, start, end, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -132,8 +136,8 @@ class HistoricTemperatureModel():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            temp = HistoricTemperatureModel(id, time, value)
+        for id, start, end, value in cur:
+            temp = HistoricTemperatureModel(id, start, end, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -156,8 +160,8 @@ class HistoricTemperatureModel():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            returnValue = HistoricTemperatureModel(id, time, value)
+        for id, start, end, value in cur:
+            returnValue = HistoricTemperatureModel(id, start, end, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -179,8 +183,8 @@ class HistoricTemperatureModel():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            returnValue = HistoricTemperatureModel(id, time, value)
+        for id, start, end, value in cur:
+            returnValue = HistoricTemperatureModel(id, start, end, value)
 
         # Clean and return
         logging.debug("Closing connection")

@@ -4,9 +4,10 @@ from model.connectionService import ConnectionService
 logging.getLogger(__name__)
 
 class HistoricCO2Model():
-    def __init__(self, id, time, value):
+    def __init__(self, id, startTime, endTime, value):
         self.id = id
-        self.time = time
+        self.startTime = startTime
+        self.endTime = endTime
         self.value = value
 
     def to_json(self):
@@ -14,8 +15,11 @@ class HistoricCO2Model():
             'type': 'Historic CO2 sensor reading',
             'id': self.id,
             'attributes': {
-                    'value': str(self.value),
-                    'readingTimeUTC': self.time,
+                'averageValue': str(self.value),
+                'readingTimePeriod': {
+                    'startUTC': self.startTime,
+                    'endUTC': self.endTime,
+                },
                 'readingUnit': 'ppm'
             }
         }
@@ -86,8 +90,8 @@ class HistoricCO2Model():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            returnValue = HistoricCO2Model(id, time, value)
+        for id, time, end, value in cur:
+            returnValue = HistoricCO2Model(id, time, end, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -108,8 +112,8 @@ class HistoricCO2Model():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            temp = HistoricCO2Model(id, time, value)
+        for id, time, end, value in cur:
+            temp = HistoricCO2Model(id, time, end, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -132,8 +136,8 @@ class HistoricCO2Model():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            temp = HistoricCO2Model(id, time, value)
+        for id, time, end, value in cur:
+            temp = HistoricCO2Model(id, time, end, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -155,8 +159,8 @@ class HistoricCO2Model():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            returnValue = HistoricCO2Model(id, time, value)
+        for id, time, end, value in cur:
+            returnValue = HistoricCO2Model(id, time, end, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -177,8 +181,8 @@ class HistoricCO2Model():
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
-        for id, time, value in cur:
-            returnValue = HistoricCO2Model(id, time, value)
+        for id, time, end, value in cur:
+            returnValue = HistoricCO2Model(id, time, end, value)
 
         # Clean and return
         logging.debug("Closing connection")

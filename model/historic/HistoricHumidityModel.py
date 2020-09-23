@@ -4,21 +4,25 @@ from model.connectionService import ConnectionService
 logging.getLogger(__name__)
 
 class HistoricHumidityModel():
-	def __init__(self,id,time,value):
+	def __init__(self, id, startTime, endTime, value):
 		self.id = id
-		self.time = time
+		self.startTime = startTime
+		self.endTime = endTime
 		self.value = value
 
 	def to_json(self):
 		data = {
-			'type': 'Historic humidity sensor reading',
+			'type': 'Historic CO2 sensor reading',
 			'id': self.id,
 			'attributes': {
-				'value': str(self.value),
-				'readingTimeUTC': self.time,
+				'averageValue': str(self.value),
+				'readingTimePeriod': {
+					'startUTC': self.startTime,
+					'endUTC': self.endTime,
+				},
 				'readingUnit': '%'
-				}
 			}
+		}
 		return data
 
 	@staticmethod
@@ -85,8 +89,8 @@ class HistoricHumidityModel():
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
-		for id,time,value in cur:
-			returnValue = HistoricHumidityModel(id,time,value)
+		for id,start, end, value in cur:
+			returnValue = HistoricHumidityModel(id, start, end, value)
 
 		# Clean and return
 		logging.debug("Closing connection")
@@ -107,8 +111,8 @@ class HistoricHumidityModel():
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
-		for id,time,value in cur:
-			temp = HistoricHumidityModel(id,time,value)
+		for id, start, end, value in cur:
+			temp = HistoricHumidityModel(id,start, end, value)
 			returnValue.append(temp)
 
 		# Clean and return
@@ -130,8 +134,8 @@ class HistoricHumidityModel():
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
-		for id,time,value in cur:
-			temp = HistoricHumidityModel(id,time,value)
+		for id,start, end, value in cur:
+			temp = HistoricHumidityModel(id,start, end, value)
 			returnValue.append(temp)
 
 		# Clean and return
@@ -153,8 +157,8 @@ class HistoricHumidityModel():
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
-		for id,time,value in cur:
-			returnValue = HistoricHumidityModel(id,time,value)
+		for id,start, end, value in cur:
+			returnValue = HistoricHumidityModel(id,start, end, value)
 
 		# Clean and return
 		logging.debug("Closing connection")
@@ -175,8 +179,8 @@ class HistoricHumidityModel():
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
-		for id,time,value in cur:
-			returnValue = HistoricHumidityModel(id,time,value)
+		for id,start, end, value in cur:
+			returnValue = HistoricHumidityModel(id,start, end, value)
 
 		# Clean and return
 		logging.debug("Closing connection")
