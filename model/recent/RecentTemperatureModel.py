@@ -1,13 +1,9 @@
 import logging
 from model.connectionService import ConnectionService
-import logging
 
 logging.getLogger(__name__)
 
-logging.getLogger(__name__)
-
-
-class CO2Model():
+class RecentTemperatureModel():
     def __init__(self, id, time, value):
         self.id = id
         self.time = time
@@ -21,14 +17,14 @@ class CO2Model():
         # Execution
         logging.debug("Starting insert")
         cur.execute(
-            'Insert into tbl_co2(fld_time,fld_value) values (UTC_TIMESTAMP(),?)', (self.value,))
+            'Insert into tbl_recent_temperature(fld_time,fld_value) values (UTC_TIMESTAMP(),?)', (self.value,))
 
         logging.debug("Committing changes")
         conn.commit()
 
         # Update this Object with
         self.id = cur.lastrowid
-        self.time = CO2Model.get_by_id(self.id).time
+        self.time = RecentTemperatureModel.get_by_id(self.id).time
         logging.debug("Generated item has id: " + str(self.id))
 
         # Clean and return
@@ -39,12 +35,12 @@ class CO2Model():
 
     def to_json(self):
         data = {
-            'type': 'CO2 sensor reading',
+            'type': 'Recent temperature sensor reading',
             'id': self.id,
             'attributes': {
                     'value': str(self.value),
                     'readingTimeUTC': self.time,
-                'readingUnit': 'ppm'
+                'readingUnit': 'celsius'
             }
         }
         return data
@@ -52,10 +48,10 @@ class CO2Model():
     @staticmethod
     def average_json(avgDecimal):
         json = {
-            'type': 'CO2 average',
+            'type': 'Recent temperature average',
             'attributes': {
                     'average': str(avgDecimal),
-                    'readingUnit': 'ppm'
+                    'readingUnit': 'celsius'
             }
         }
         return json
@@ -69,7 +65,7 @@ class CO2Model():
 
         # Execution
         logging.debug("Starting delete")
-        cur.execute("Delete from tbl_co2")
+        cur.execute("Delete from tbl_recent_temperature")
 
         logging.debug("Committing changes")
         conn.commit()
@@ -90,7 +86,7 @@ class CO2Model():
         # Execution
         logging.debug("Starting delete")
         cur.execute(
-            'Delete from tbl_co2 where fld_time>=? and fld_time<=?', (start, end,))
+            'Delete from tbl_recent_temperature where fld_time>=? and fld_time<=?', (start, end,))
 
         logging.debug("Committing changes")
         conn.commit()
@@ -110,12 +106,12 @@ class CO2Model():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_co2 where fld_pk_id=?', (id,))
+        cur.execute('Select * from tbl_recent_temperature where fld_pk_id=?', (id,))
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            returnValue = CO2Model(id, time, value)
+            returnValue = RecentTemperatureModel(id, time, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -132,12 +128,12 @@ class CO2Model():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_co2')
+        cur.execute('Select * from tbl_recent_temperature')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            temp = CO2Model(id, time, value)
+            temp = RecentTemperatureModel(id, time, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -156,12 +152,12 @@ class CO2Model():
         # Execution
         logging.debug("Starting select")
         cur.execute(
-            'Select * from tbl_co2 where fld_time>=? and fld_time<=?', (start, end,))
+            'Select * from tbl_recent_temperature where fld_time>=? and fld_time<=?', (start, end,))
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            temp = CO2Model(id, time, value)
+            temp = RecentTemperatureModel(id, time, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -179,12 +175,13 @@ class CO2Model():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_co2 order by fld_time asc limit 1')
+        cur.execute(
+            'Select * from tbl_recent_temperature order by fld_time asc limit 1')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            returnValue = CO2Model(id, time, value)
+            returnValue = RecentTemperatureModel(id, time, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -201,12 +198,13 @@ class CO2Model():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_co2 order by fld_time desc limit 1')
+        cur.execute(
+            'Select * from tbl_recent_temperature order by fld_time desc limit 1')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            returnValue = CO2Model(id, time, value)
+            returnValue = RecentTemperatureModel(id, time, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -223,7 +221,7 @@ class CO2Model():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select AVG(fld_value) from tbl_co2')
+        cur.execute('Select AVG(fld_value) from tbl_recent_temperature')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
@@ -246,7 +244,7 @@ class CO2Model():
         # Execution
         logging.debug("Starting select")
         cur.execute(
-            'Select AVG(fld_value) from tbl_co2 where fld_time>=? and fld_time<=?', (start, end,))
+            'Select AVG(fld_value) from tbl_recent_temperature where fld_time>=? and fld_time<=?', (start, end,))
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")

@@ -16,11 +16,16 @@ FlaskJSON(app)
 CORS(app)
 
 #Other routes, each endpoint should get its own file	from server.api import sensors
-from server.api import temperatures
-from server.api import CO2
-from server.api import humidities
-from server.api import pressures
-from server.api import sensors
+from server.api.historic import historicTemperatures
+from server.api.historic import historicCO2
+from server.api.historic import historicHumidities
+from server.api.historic import historicPressures
+from server.api.historic import historicSensors
+from server.api.recent import recentTemperatures
+from server.api.recent import recentCO2
+from server.api.recent import recentHumidities
+from server.api.recent import recentPressures
+from server.api.recent import recentSensors
 
 # Error Handlers for app
 @app.errorhandler(403)

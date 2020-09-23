@@ -4,20 +4,20 @@ from flask_json import json_response as res
 from flask import request as req
 from flask import abort
 from datetime import datetime
-from model.CO2Model import CO2Model
+from model.recent.RecentCO2Model import RecentCO2Model
 import logging
 import time
 import mariadb
 
 logging.getLogger(__name__)
 
-@app.route('/co2', methods=['GET'])
-def co2_get_all():
-	logging.debug("Received request /co2")
+@app.route('/recent/co2', methods=['GET'])
+def recent_co2_get_all():
+	logging.debug("Received request /recent/co2")
 	startTime = time.monotonic()
 	try:
 		dataArray = []
-		co2Array = CO2Model.get_all()
+		co2Array = RecentCO2Model.get_all()
 		for tempModel in co2Array:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -26,12 +26,12 @@ def co2_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/co2/<int:id>', methods=['GET'])
-def co2_get_by_id(id):
-	logging.debug("Received request /co2/<id>")
+@app.route('/recent/co2/<int:id>', methods=['GET'])
+def recent_co2_get_by_id(id):
+	logging.debug("Received request /recent/co2/<id>")
 	startTime = time.monotonic()
 	try:
-		returnValue = CO2Model.get_by_id(id)
+		returnValue = RecentCO2Model.get_by_id(id)
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -41,9 +41,9 @@ def co2_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/co2/search', methods=['GET'])
-def co2_get_by_search():
-	logging.debug("Received request /co2/search")
+@app.route('/recent/co2/search', methods=['GET'])
+def recent_co2_get_by_search():
+	logging.debug("Received request /recent/co2/search")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -55,7 +55,7 @@ def co2_get_by_search():
 			end = datetime.utcnow()
 
 		dataArray = []
-		co2Array = CO2Model.get_by_search(start,end)
+		co2Array = RecentCO2Model.get_by_search(start,end)
 		for tempModel in co2Array:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -64,12 +64,12 @@ def co2_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/co2/oldest', methods=['GET'])
-def co2_get_oldest():
-	logging.debug("Received request /co2/oldest")
+@app.route('/recent/co2/oldest', methods=['GET'])
+def recent_co2_get_oldest():
+	logging.debug("Received request /recent/co2/oldest")
 	startTime = time.monotonic()
 	try:
-		returnValue = CO2Model.get_oldest()
+		returnValue = RecentCO2Model.get_oldest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -79,12 +79,12 @@ def co2_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/co2/newest', methods=['GET'])
-def co2_get_newest():
-	logging.debug("Received request /co2/newest")
+@app.route('/recent/co2/newest', methods=['GET'])
+def recent_co2_get_newest():
+	logging.debug("Received request /recent/co2/newest")
 	startTime = time.monotonic()
 	try:
-		returnValue = CO2Model.get_newest()
+		returnValue = RecentCO2Model.get_newest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -94,22 +94,22 @@ def co2_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/co2/average', methods=['GET'])
-def co2_get_average():
-	logging.debug("Received request /co2/average")
+@app.route('/recent/co2/average', methods=['GET'])
+def recent_co2_get_average():
+	logging.debug("Received request /recent/co2/average")
 	startTime = time.monotonic()
 	try:
-		returnValue = CO2Model.get_average()
-		data = CO2Model.average_json(returnValue)
+		returnValue = RecentCO2Model.get_average()
+		data = RecentCO2Model.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("co get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/co2/average/range', methods=['GET'])
-def co2_get_average_in_range():
-	logging.debug("Received request /co2/average/range")
+@app.route('/recent/co2/average/range', methods=['GET'])
+def recent_co2_get_average_in_range():
+	logging.debug("Received request /recent/co2/average/range")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -120,8 +120,8 @@ def co2_get_average_in_range():
 		if end is None:
 			end = datetime.utcnow()
 
-		returnValue = CO2Model.get_average_by_range(start,end)
-		data = CO2Model.average_json(returnValue)
+		returnValue = RecentCO2Model.get_average_by_range(start,end)
+		data = RecentCO2Model.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("co2 get average by range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())

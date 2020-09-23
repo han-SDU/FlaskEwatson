@@ -1,43 +1,17 @@
 import logging
 from model.connectionService import ConnectionService
-import logging
 
 logging.getLogger(__name__)
 
-
-class PressureModel():
+class HistoricPressureModel():
     def __init__(self, id, time, value):
         self.id = id
         self.time = time
         self.value = value
 
-    def post(self):
-        # Init
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
-
-        # Execution
-        logging.debug("Starting insert")
-        cur.execute(
-            'Insert into tbl_pressure(fld_time,fld_value) values (UTC_TIMESTAMP(),?)', (self.value,))
-
-        logging.debug("Committing changes")
-        conn.commit()
-
-        # Update this Object with
-        self.id = cur.lastrowid
-        self.time = PressureModel.get_by_id(self.id).time
-        logging.debug("Generated item has id: " + str(self.id))
-
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
-
-        return self.id
-
     def to_json(self):
         data = {
-            'type': 'Pressure sensor reading',
+            'type': 'Historic pressure sensor reading',
             'id': self.id,
             'attributes': {
                     'value': str(self.value),
@@ -50,7 +24,7 @@ class PressureModel():
     @staticmethod
     def average_json(avgDecimal):
         json = {
-            'type': 'Pressure average',
+            'type': 'Historic pressure average',
             'attributes': {
                     'average': str(avgDecimal),
                     'readingUnit': 'hPa'
@@ -88,7 +62,7 @@ class PressureModel():
         # Execution
         logging.debug("Starting delete")
         cur.execute(
-            'Delete from tbl_pressure where fld_time>=? and fld_time<=?', (start, end,))
+            'Delete from tbl_historic_pressure where fld_time>=? and fld_time<=?', (start, end,))
 
         logging.debug("Committing changes")
         conn.commit()
@@ -108,12 +82,12 @@ class PressureModel():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_pressure where fld_pk_id=?', (id,))
+        cur.execute('Select * from tbl_historic_pressure where fld_pk_id=?', (id,))
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            returnValue = PressureModel(id, time, value)
+            returnValue = HistoricPressureModel(id, time, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -130,12 +104,12 @@ class PressureModel():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_pressure')
+        cur.execute('Select * from tbl_historic_pressure')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            temp = PressureModel(id, time, value)
+            temp = HistoricPressureModel(id, time, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -154,12 +128,12 @@ class PressureModel():
         # Execution
         logging.debug("Starting select")
         cur.execute(
-            'Select * from tbl_pressure where fld_time>=? and fld_time<=?', (start, end,))
+            'Select * from tbl_historic_pressure where fld_time>=? and fld_time<=?', (start, end,))
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            temp = PressureModel(id, time, value)
+            temp = HistoricPressureModel(id, time, value)
             returnValue.append(temp)
 
         # Clean and return
@@ -177,12 +151,12 @@ class PressureModel():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_pressure order by fld_time asc limit 1')
+        cur.execute('Select * from tbl_historic_pressure order by fld_time asc limit 1')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            returnValue = PressureModel(id, time, value)
+            returnValue = HistoricPressureModel(id, time, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -199,12 +173,12 @@ class PressureModel():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select * from tbl_pressure order by fld_time desc limit 1')
+        cur.execute('Select * from tbl_historic_pressure order by fld_time desc limit 1')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
         for id, time, value in cur:
-            returnValue = PressureModel(id, time, value)
+            returnValue = HistoricPressureModel(id, time, value)
 
         # Clean and return
         logging.debug("Closing connection")
@@ -221,7 +195,7 @@ class PressureModel():
 
         # Execution
         logging.debug("Starting select")
-        cur.execute('Select AVG(fld_value) from tbl_pressure')
+        cur.execute('Select AVG(fld_value) from tbl_historic_pressure')
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")
@@ -244,7 +218,7 @@ class PressureModel():
         # Execution
         logging.debug("Starting select")
         cur.execute(
-            'Select AVG(fld_value) from tbl_pressure where fld_time>=? and fld_time<=?', (start, end,))
+            'Select AVG(fld_value) from tbl_historic_pressure where fld_time>=? and fld_time<=?', (start, end,))
 
         # Formatting of return data
         logging.debug("Formatting query data to objects")

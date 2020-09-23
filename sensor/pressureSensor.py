@@ -3,7 +3,7 @@ import time
 import os
 import random
 import logging
-from model.PressureModel import PressureModel
+from model.recent.RecentPressureModel import RecentPressureModel
 
 logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def mockRun():
 		try:
 			# Mock data creation
 			value = random.uniform(0,100)
-			newReading = PressureModel(None,None,value)
+			newReading = RecentPressureModel(None,None,value)
 
 			# Insert
 			logging.info("Generating mock data for pressure sensor with value: "+str(value))

@@ -5,20 +5,20 @@ from flask import request as req
 from flask import abort
 from datetime import datetime
 from datetime import timezone
-from model.TemperatureModel import TemperatureModel
+from model.recent.RecentSensorModel import RecentSensorModel
 import logging
 import time
 import mariadb
 
 logging.getLogger(__name__)
 
-@app.route('/temperatures', methods=['GET'])
+@app.route('/recent/temperatures', methods=['GET'])
 def temperatures_get_all():
-	logging.debug("Received request /temperatures")
+	logging.debug("Received request /recent/temperatures")
 	startTime = time.monotonic()
 	try:
 		dataArray = []
-		temperatureArray = TemperatureModel.get_all()
+		temperatureArray = RecentSensorModel.get_all()
 		for tempModel in temperatureArray:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -27,12 +27,12 @@ def temperatures_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/<int:id>', methods=['GET'])
-def temperatures_get_by_id(id):
-	logging.debug("Received request /temperatures/<id>")
+@app.route('/recent/temperatures/<int:id>', methods=['GET'])
+def recent_temperatures_get_by_id(id):
+	logging.debug("Received request /recent/temperatures/<id>")
 	startTime = time.monotonic()
 	try:
-		returnValue = TemperatureModel.get_by_id(id)
+		returnValue = RecentSensorModel.get_by_id(id)
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -42,9 +42,9 @@ def temperatures_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/search', methods=['GET'])
-def temperatures_get_by_search():
-	logging.debug("Received request /temperatures/search")
+@app.route('/recent/temperatures/search', methods=['GET'])
+def recent_temperatures_get_by_search():
+	logging.debug("Received request /recent/temperatures/search")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -56,7 +56,7 @@ def temperatures_get_by_search():
 			end = datetime.utcnow()
 
 		dataArray = []
-		temperatureArray = TemperatureModel.get_by_search(start,end)
+		temperatureArray = RecentSensorModel.get_by_search(start,end)
 		for tempModel in temperatureArray:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -65,12 +65,12 @@ def temperatures_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/oldest', methods=['GET'])
-def temperatures_get_oldest():
-	logging.debug("Received request /temperatures/oldest")
+@app.route('/recent/temperatures/oldest', methods=['GET'])
+def recent_temperatures_get_oldest():
+	logging.debug("Received request /recent/temperatures/oldest")
 	startTime = time.monotonic()
 	try:
-		returnValue = TemperatureModel.get_oldest()
+		returnValue = RecentSensorModel.get_oldest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -80,12 +80,12 @@ def temperatures_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/newest', methods=['GET'])
-def temperatures_get_newest():
-	logging.debug("Received request /temperatures/newest")
+@app.route('/recent/temperatures/newest', methods=['GET'])
+def recent_temperatures_get_newest():
+	logging.debug("Received request /recent/temperatures/newest")
 	startTime = time.monotonic()
 	try:
-		returnValue = TemperatureModel.get_newest()
+		returnValue = RecentSensorModel.get_newest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -95,22 +95,22 @@ def temperatures_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/average', methods=['GET'])
-def temperatures_get_average():
-	logging.debug("Received request /temperatures/average")
+@app.route('/recent/temperatures/average', methods=['GET'])
+def recent_temperatures_get_average():
+	logging.debug("Received request /recent/temperatures/average")
 	startTime = time.monotonic()
 	try:
-		returnValue = TemperatureModel.get_average()
-		data = TemperatureModel.average_json(returnValue)
+		returnValue = RecentSensorModel.get_average()
+		data = RecentSensorModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/average/range', methods=['GET'])
-def temperatures_get_average_in_range():
-	logging.debug("Received request /temperatures/average/range")
+@app.route('/recent/temperatures/average/range', methods=['GET'])
+def recent_temperatures_get_average_in_range():
+	logging.debug("Received request /recent/temperatures/average/range")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -121,17 +121,17 @@ def temperatures_get_average_in_range():
 		if end is None:
 			end = datetime.utcnow()
 
-		returnValue = TemperatureModel.get_average_by_range(start,end)
-		data = TemperatureModel.average_json(returnValue)
+		returnValue = RecentSensorModel.get_average_by_range(start,end)
+		data = RecentSensorModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature get average in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route("/temperatures/reset", methods=["DELETE"])
-def temperatures_reset():
-	logging.debug("Received request /temperatures/reset")
+@app.route("/recent/temperatures/reset", methods=["DELETE"])
+def recent_temperatures_reset():
+	logging.debug("Received request /recent/temperatures/reset")
 	startTime = time.monotonic()
 	try:
 		# Requires a simple pw
@@ -139,16 +139,16 @@ def temperatures_reset():
 		if pw != "A7G2V9":
 			abort(403)
 
-		TemperatureModel.delete_all()
+		RecentSensorModel.delete_all()
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/temperatures/reset/range', methods=['DELETE'])
-def temperatures_reset_in_range():
-	logging.debug("Received request /temperatures/reset/range")
+@app.route('/recent/temperatures/reset/range', methods=['DELETE'])
+def recent_temperatures_reset_in_range():
+	logging.debug("Received request /recent/temperatures/reset/range")
 	startTime = time.monotonic()
 	try:
 		# Requires a simple pw
@@ -164,7 +164,7 @@ def temperatures_reset_in_range():
 		if end is None:
 			end = datetime.utcnow()
 
-		TemperatureModel.delete_by_range(start,end)
+		RecentSensorModel.delete_by_range(start,end)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("temperature reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())

@@ -3,7 +3,7 @@ import time
 import random
 import os
 import logging
-from model.CO2Model import CO2Model
+from model.recent.RecentCO2Model import RecentCO2Model
 
 logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ def mockRun():
         try:
             # Create Mock data
             value = random.uniform(0, 69)
-            newReading = CO2Model(None, None, value)
+            newReading = RecentCO2Model(None, None, value)
 
             # Insert into db
             logging.info(

@@ -3,7 +3,7 @@ import time
 import os
 import random
 import logging
-from model.HumidityModel import HumidityModel
+from model.recent.RecentHumidityModel import RecentHumidityModel
 
 logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def mockRun():
 		try:
 			# Create a Mock value
 			value = random.uniform(0,100)
-			newReading = HumidityModel(None, None, value)
+			newReading = RecentHumidityModel(None, None, value)
 
 			# Place in database
 			logging.info("Generating mock data for humidity sensor with value: "+str(value))

@@ -4,20 +4,20 @@ from flask_json import json_response as res
 from flask import request as req
 from flask import abort
 from datetime import datetime
-from model.HumidityModel import HumidityModel
+from model.recent.RecentHumidityModel import RecentHumidityModel
 import logging
 import time
 import mariadb
 
 logging.getLogger(__name__)
 
-@app.route('/humidities', methods=['GET'])
-def humidity_get_all():
-	logging.debug("Received request /humidities")
+@app.route('/recent/humidities', methods=['GET'])
+def recent_humidity_get_all():
+	logging.debug("Received request /recent/humidities")
 	startTime = time.monotonic()
 	try:
 		dataArray = []
-		humArray = HumidityModel.get_all()
+		humArray = RecentHumidityModel.get_all()
 		for tempModel in humArray:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -26,12 +26,12 @@ def humidity_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/humidities/<int:id>', methods=['GET'])
-def humidity_get_by_id(id):
-	logging.debug("Received request /humidities/<id>")
+@app.route('/recent/humidities/<int:id>', methods=['GET'])
+def recent_humidity_get_by_id(id):
+	logging.debug("Received request /recent/humidities/<id>")
 	startTime = time.monotonic()
 	try:
-		returnValue = HumidityModel.get_by_id(id)
+		returnValue = RecentHumidityModel.get_by_id(id)
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -41,9 +41,9 @@ def humidity_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/humidities/search', methods=['GET'])
-def humidity_get_by_search():
-	logging.debug("Received request /humidities/search")
+@app.route('/recent/humidities/search', methods=['GET'])
+def recent_humidity_get_by_search():
+	logging.debug("Received request /recent/humidities/search")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -55,7 +55,7 @@ def humidity_get_by_search():
 			end = datetime.utcnow()
 
 		dataArray = []
-		humArray = HumidityModel.get_by_search(start,end)
+		humArray = RecentHumidityModel.get_by_search(start,end)
 		for tempModel in humArray:
 			dataArray.append(tempModel.to_json())
 		elapsedTime = time.monotonic() - startTime
@@ -64,12 +64,12 @@ def humidity_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/humidities/oldest', methods=['GET'])
-def humidity_get_oldest():
-	logging.debug("Received request /humidities/oldest")
+@app.route('/recent/humidities/oldest', methods=['GET'])
+def recent_humidity_get_oldest():
+	logging.debug("Received request /recent/humidities/oldest")
 	startTime = time.monotonic()
 	try:
-		returnValue = HumidityModel.get_oldest()
+		returnValue = RecentHumidityModel.get_oldest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -79,12 +79,12 @@ def humidity_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/humidities/newest', methods=['GET'])
-def humidity_get_newest():
-	logging.debug("Received request /humidities/newest")
+@app.route('/recent/humidities/newest', methods=['GET'])
+def recent_humidity_get_newest():
+	logging.debug("Received request /recent/humidities/newest")
 	startTime = time.monotonic()
 	try:
-		returnValue = HumidityModel.get_newest()
+		returnValue = RecentHumidityModel.get_newest()
 		if returnValue is None:
 			abort(404)
 		data = returnValue.to_json()
@@ -94,22 +94,22 @@ def humidity_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/humidities/average', methods=['GET'])
-def humidity_get_average():
-	logging.debug("Received request /humidities/average")
+@app.route('/recent/humidities/average', methods=['GET'])
+def recent_humidity_get_average():
+	logging.debug("Received request /recent/humidities/average")
 	startTime = time.monotonic()
 	try:
-		returnValue = HumidityModel.get_average()
-		data = HumidityModel.average_json(returnValue)
+		returnValue = RecentHumidityModel.get_average()
+		data = RecentHumidityModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("humidity get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/humidities/average/range', methods=['GET'])
-def humidity_get_average_in_range():
-	logging.debug("Received request /humidities/average/range")
+@app.route('/recent/humidities/average/range', methods=['GET'])
+def recent_humidity_get_average_in_range():
+	logging.debug("Received request /recent/humidities/average/range")
 	startTime = time.monotonic()
 	try:
 		start = req.args.get('start')
@@ -120,8 +120,8 @@ def humidity_get_average_in_range():
 		if end is None:
 			end = datetime.utcnow()
 
-		returnValue = HumidityModel.get_average_by_range(start,end)
-		data = HumidityModel.average_json(returnValue)
+		returnValue = RecentHumidityModel.get_average_by_range(start,end)
+		data = RecentHumidityModel.average_json(returnValue)
 		elapsedTime = time.monotonic() - startTime
 		logging.debug("humidity get average in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
