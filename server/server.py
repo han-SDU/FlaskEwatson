@@ -10,6 +10,7 @@ import logging
 import time
 import traceback
 
+logging.getLogger(__name__)
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 FlaskJSON(app)

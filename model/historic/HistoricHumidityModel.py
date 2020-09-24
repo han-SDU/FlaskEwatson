@@ -65,7 +65,7 @@ class HistoricHumidityModel():
 
 		# Execution
 		logging.debug("Starting delete")
-		cur.execute('Delete from tbl_historic_humidity where fld_time>=? and fld_time<=?', (start,end,))
+		cur.execute('Delete from tbl_historic_humidity where fld_start_time>=? and fld_end_time<=?', (start,end,))
 
 		logging.debug("Committing changes")
 		conn.commit()
@@ -130,7 +130,7 @@ class HistoricHumidityModel():
 
 		# Execution
 		logging.debug("Starting select")
-		cur.execute('Select * from tbl_historic_humidity where fld_time>=? and fld_time<=?', (start,end,))
+		cur.execute('Select * from tbl_historic_humidity where fld_start_time>=? and fld_end_time<=?', (start,end,))
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
@@ -153,7 +153,7 @@ class HistoricHumidityModel():
 
 		# Execution
 		logging.debug("Starting select")
-		cur.execute('Select * from tbl_historic_humidity order by fld_time asc limit 1')
+		cur.execute('Select * from tbl_historic_humidity order by fld_end_time asc limit 1')
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
@@ -175,7 +175,7 @@ class HistoricHumidityModel():
 
 		# Execution
 		logging.debug("Starting select")
-		cur.execute('Select * from tbl_historic_humidity order by fld_time desc limit 1')
+		cur.execute('Select * from tbl_historic_humidity order by fld_end_time desc limit 1')
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
@@ -197,7 +197,7 @@ class HistoricHumidityModel():
 
 		# Execution
 		logging.debug("Starting select")
-		cur.execute('Select AVG(fld_value) from tbl_historic_humidity')
+		cur.execute('Select AVG(fld_average) from tbl_historic_humidity')
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")
@@ -219,7 +219,7 @@ class HistoricHumidityModel():
 
 		# Execution
 		logging.debug("Starting select")
-		cur.execute('Select AVG(fld_value) from tbl_historic_humidity where fld_time>=? and fld_time<=?', (start,end,))
+		cur.execute('Select AVG(fld_average) from tbl_historic_humidity where fld_start_time>=? and fld_end_time<=?', (start,end,))
 
 		# Formatting of return data
 		logging.debug("Formatting query data to objects")

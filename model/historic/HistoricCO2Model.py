@@ -4,233 +4,233 @@ from model.connectionService import ConnectionService
 logging.getLogger(__name__)
 
 class HistoricCO2Model():
-    def __init__(self, id, startTime, endTime, value):
-        self.id = id
-        self.startTime = startTime
-        self.endTime = endTime
-        self.value = value
+	def __init__(self, id, startTime, endTime, value):
+		self.id = id
+		self.startTime = startTime
+		self.endTime = endTime
+		self.value = value
 
-    def to_json(self):
-        data = {
-            'type': 'Historic CO2 sensor reading',
-            'id': self.id,
-            'attributes': {
-                'averageValue': str(self.value),
-                'readingTimePeriod': {
-                    'startUTC': self.startTime,
-                    'endUTC': self.endTime,
-                },
-                'readingUnit': 'ppm'
-            }
-        }
-        return data
+	def to_json(self):
+		data = {
+			'type': 'Historic CO2 sensor reading',
+			'id': self.id,
+			'attributes': {
+				'averageValue': str(self.value),
+				'readingTimePeriod': {
+					'startUTC': self.startTime,
+					'endUTC': self.endTime,
+				},
+				'readingUnit': 'ppm'
+			}
+		}
+		return data
 
-    @staticmethod
-    def average_json(avgDecimal):
-        json = {
-            'type': 'Historic CO2 average',
-            'attributes': {
-                    'average': str(avgDecimal),
-                    'readingUnit': 'ppm'
-            }
-        }
-        return json
+	@staticmethod
+	def average_json(avgDecimal):
+		json = {
+			'type': 'Historic CO2 average',
+			'attributes': {
+					'average': str(avgDecimal),
+					'readingUnit': 'ppm'
+			}
+		}
+		return json
 
-    @staticmethod
-    def delete_all():
-        # Init
-        returnValue = True
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def delete_all():
+		# Init
+		returnValue = True
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting delete")
-        cur.execute("Delete from tbl_historic_co2")
+		# Execution
+		logging.debug("Starting delete")
+		cur.execute("Delete from tbl_historic_co2")
 
-        logging.debug("Committing changes")
-        conn.commit()
+		logging.debug("Committing changes")
+		conn.commit()
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def delete_by_range(start, end):
-        # Init
-        returnValue = True
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def delete_by_range(start, end):
+		# Init
+		returnValue = True
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting delete")
-        cur.execute(
-            'Delete from tbl_historic_co2 where fld_time>=? and fld_time<=?', (start, end,))
+		# Execution
+		logging.debug("Starting delete")
+		cur.execute(
+			'Delete from tbl_historic_co2 where fld_start_time>=? and fld_end_time<=?', (start, end,))
 
-        logging.debug("Committing changes")
-        conn.commit()
+		logging.debug("Committing changes")
+		conn.commit()
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_by_id(id):
-        # Init
-        returnValue = None
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_by_id(id):
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute('Select * from tbl_historic_co2 where fld_pk_id=?', (id,))
+		# Execution
+		logging.debug("Starting select")
+		cur.execute('Select * from tbl_historic_co2 where fld_pk_id=?', (id,))
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for id, time, end, value in cur:
-            returnValue = HistoricCO2Model(id, time, end, value)
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for id, time, end, value in cur:
+			returnValue = HistoricCO2Model(id, time, end, value)
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_all():
-        # Init
-        returnValue = []
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_all():
+		# Init
+		returnValue = []
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute('Select * from tbl_historic_co2')
+		# Execution
+		logging.debug("Starting select")
+		cur.execute('Select * from tbl_historic_co2')
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for id, time, end, value in cur:
-            temp = HistoricCO2Model(id, time, end, value)
-            returnValue.append(temp)
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for id, time, end, value in cur:
+			temp = HistoricCO2Model(id, time, end, value)
+			returnValue.append(temp)
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_by_search(start, end):
-        # Init
-        returnValue = []
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_by_search(start, end):
+		# Init
+		returnValue = []
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute(
-            'Select * from tbl_historic_co2 where fld_time>=? and fld_time<=?', (start, end,))
+		# Execution
+		logging.debug("Starting select")
+		cur.execute(
+			'Select * from tbl_historic_co2 where fld_start_time>=? and fld_end_time<=?', (start, end,))
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for id, time, end, value in cur:
-            temp = HistoricCO2Model(id, time, end, value)
-            returnValue.append(temp)
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for id, time, end, value in cur:
+			temp = HistoricCO2Model(id, time, end, value)
+			returnValue.append(temp)
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_oldest():
-        # Init
-        returnValue = None
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_oldest():
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute('Select * from tbl_historic_co2 order by fld_time asc limit 1')
+		# Execution
+		logging.debug("Starting select")
+		cur.execute('Select * from tbl_historic_co2 order by fld_end_time asc limit 1')
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for id, time, end, value in cur:
-            returnValue = HistoricCO2Model(id, time, end, value)
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for id, time, end, value in cur:
+			returnValue = HistoricCO2Model(id, time, end, value)
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_newest():
-        # Init
-        returnValue = None
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_newest():
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute('Select * from tbl_historic_co2 order by fld_time desc limit 1')
+		# Execution
+		logging.debug("Starting select")
+		cur.execute('Select * from tbl_historic_co2 order by fld_end_time desc limit 1')
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for id, time, end, value in cur:
-            returnValue = HistoricCO2Model(id, time, end, value)
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for id, time, end, value in cur:
+			returnValue = HistoricCO2Model(id, time, end, value)
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_average():
-        # Init
-        returnValue = None
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_average():
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute('Select AVG(fld_value) from tbl_historic_co2')
+		# Execution
+		logging.debug("Starting select")
+		cur.execute('Select AVG(fld_average) from tbl_historic_co2')
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for c in cur:
-            returnValue = c[0]  # Average
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for c in cur:
+			returnValue = c[0]  # Average
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
 
-    @staticmethod
-    def get_average_by_range(start, end):
-        # Init
-        returnValue = None
-        conn = ConnectionService.get_connection()
-        cur = conn.cursor()
+	@staticmethod
+	def get_average_by_range(start, end):
+		# Init
+		returnValue = None
+		conn = ConnectionService.get_connection()
+		cur = conn.cursor()
 
-        # Execution
-        logging.debug("Starting select")
-        cur.execute(
-            'Select AVG(fld_value) from tbl_historic_co2 where fld_time>=? and fld_time<=?', (start, end,))
+		# Execution
+		logging.debug("Starting select")
+		cur.execute(
+			'Select AVG(fld_average) from tbl_historic_co2 where fld_start_time>=? and fld_end_time<=?', (start, end,))
 
-        # Formatting of return data
-        logging.debug("Formatting query data to objects")
-        for c in cur:
-            returnValue = c[0]  # Average
+		# Formatting of return data
+		logging.debug("Formatting query data to objects")
+		for c in cur:
+			returnValue = c[0]  # Average
 
-        # Clean and return
-        logging.debug("Closing connection")
-        conn.close()
+		# Clean and return
+		logging.debug("Closing connection")
+		conn.close()
 
-        return returnValue
+		return returnValue
