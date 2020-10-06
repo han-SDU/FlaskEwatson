@@ -1,5 +1,5 @@
 # Endpoint for pressure route
-from server.server import app
+from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -24,7 +24,6 @@ def historic_pressure_get_all():
 		logging.debug("pressure get all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/<int:id>', methods=['GET'])
@@ -40,7 +39,6 @@ def historic_pressure_get_by_id(id):
 		logging.debug("pressure get by id request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/search', methods=['GET'])
@@ -66,7 +64,6 @@ def historic_pressure_get_by_search():
 		logging.debug("temperature get all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/oldest', methods=['GET'])
@@ -82,7 +79,6 @@ def historic_pressure_get_oldest():
 		logging.debug("pressure get oldest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/newest', methods=['GET'])
@@ -98,7 +94,6 @@ def historic_pressure_get_newest():
 		logging.debug("pressure get newest all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/average', methods=['GET'])
@@ -112,7 +107,6 @@ def historic_pressures_get_average():
 		logging.debug("pressure get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/average/range', methods=['GET'])
@@ -136,7 +130,6 @@ def historic_pressure_get_average_in_range():
 		logging.debug("pressure get average by range all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route("/historic/pressures/reset", methods=["DELETE"])
@@ -155,7 +148,6 @@ def historic_pressures_reset():
 		logging.debug("Pressure reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/pressures/reset/range', methods=['DELETE'])
@@ -184,5 +176,4 @@ def historic_pressures_reset_in_range():
 		logging.debug("Pressure reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))

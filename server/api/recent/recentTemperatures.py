@@ -1,5 +1,5 @@
 # Endpoint for temperatures route
-from server.server import app
+from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -17,6 +17,7 @@ def temperatures_get_all():
 	logging.debug("Received request /recent/temperatures")
 	startTime = time.monotonic()
 	try:
+		raise Exception("MUAHA")
 		dataArray = []
 		temperatureArray = RecentTemperatureModel.get_all()
 		for tempModel in temperatureArray:
@@ -25,7 +26,6 @@ def temperatures_get_all():
 		logging.debug("temperature get all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/<int:id>', methods=['GET'])
@@ -41,7 +41,6 @@ def recent_temperatures_get_by_id(id):
 		logging.debug("temperature get by id request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/search', methods=['GET'])
@@ -67,7 +66,6 @@ def recent_temperatures_get_by_search():
 		logging.debug("temperature get by search request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/oldest', methods=['GET'])
@@ -83,7 +81,6 @@ def recent_temperatures_get_oldest():
 		logging.debug("temperature get oldest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/newest', methods=['GET'])
@@ -99,7 +96,6 @@ def recent_temperatures_get_newest():
 		logging.debug("temperature get newest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/average', methods=['GET'])
@@ -113,7 +109,6 @@ def recent_temperatures_get_average():
 		logging.debug("temperature get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/average/range', methods=['GET'])
@@ -137,7 +132,6 @@ def recent_temperatures_get_average_in_range():
 		logging.debug("temperature get average in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route("/recent/temperatures/reset", methods=["DELETE"])
@@ -156,7 +150,6 @@ def recent_temperatures_reset():
 		logging.debug("temperature reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/recent/temperatures/reset/range', methods=['DELETE'])
@@ -185,6 +178,5 @@ def recent_temperatures_reset_in_range():
 		logging.debug("temperature reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 

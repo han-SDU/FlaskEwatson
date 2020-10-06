@@ -1,5 +1,5 @@
 # Abstract endpoint grouping  sensor readings together
-from server.server import app
+from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -24,7 +24,6 @@ def historic_sensors_get_all():
 		logging.debug("sensors get all request time: " + str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
   
 
@@ -50,7 +49,6 @@ def historic_sensors_get_by_search():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
@@ -66,7 +64,6 @@ def historic_sensors_get_oldest():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
@@ -82,7 +79,6 @@ def historic_sensors_get_newest():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
@@ -98,7 +94,6 @@ def historic_sensors_get_average():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
@@ -124,7 +119,6 @@ def historic_sensors_get_average_in_range():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route("/historic/sensors/reset", methods=["DELETE"])
@@ -143,7 +137,6 @@ def historic_sensors_reset():
 		logging.debug("temperature reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/sensors/reset/range', methods=['DELETE'])
@@ -172,5 +165,4 @@ def historic_sensors_reset_in_range():
 		logging.debug("temperature reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))

@@ -1,5 +1,5 @@
 # Endpoint for co2 route
-from server.server import app
+from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -24,7 +24,6 @@ def historic_co2_get_all():
 		logging.debug("co2 get all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/<int:id>', methods=['GET'])
@@ -40,7 +39,6 @@ def historic_co2_get_by_id(id):
 		logging.debug("co2 get by id request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/search', methods=['GET'])
@@ -66,7 +64,6 @@ def historic_co2_get_by_search():
 		logging.debug("co2 get by search request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/oldest', methods=['GET'])
@@ -82,7 +79,6 @@ def historic_co2_get_oldest():
 		logging.debug("co2 get oldest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/newest', methods=['GET'])
@@ -98,7 +94,6 @@ def historic_co2_get_newest():
 		logging.debug("co2 get newest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/average', methods=['GET'])
@@ -112,7 +107,6 @@ def historic_co2_get_average():
 		logging.debug("co get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/average/range', methods=['GET'])
@@ -136,7 +130,6 @@ def historic_co2_get_average_in_range():
 		logging.debug("co2 get average by range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route("/historic/co2/reset", methods=["DELETE"])
@@ -155,7 +148,6 @@ def historic_co2_reset():
 		logging.debug("co2 reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/co2/reset/range', methods=['DELETE'])
@@ -184,5 +176,4 @@ def historic_co2_reset_in_range():
 		logging.debug("co2 reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))

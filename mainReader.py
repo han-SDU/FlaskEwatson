@@ -45,6 +45,8 @@ def main(argv):
         # File handler
         if not os.path.exists('logging'):
             os.makedirs('logging')
+        if not os.path.exists('logging/reading'):
+            os.makedirs('logging/reading')
         fileLogger = handlers.RotatingFileHandler(
             filename="logging/"+args.logFileName+".log", maxBytes=10*1024*1024, backupCount=5)
         fileLogger.setLevel(args.fileLogLevel)
@@ -86,12 +88,6 @@ def main(argv):
         co2Daemon.name = "CO2Daemon"
         co2Daemon.start()
 
-        # Http related start up
-        logging.info('Starting Flask Server')
-        serverDaemon = threading.Thread(target=server.run, daemon=True)
-        serverDaemon.name = "ServerDaemon"
-        serverDaemon.start()
-
         Event().wait()
         logging.info('Exit with ctrl-c')
     except KeyboardInterrupt as e:
@@ -102,4 +98,7 @@ def main(argv):
 
     # Add a catch all
 if __name__ == "__main__":
-    main(sys.argv[1:])
+     try:
+	    main(sys.argv[1:])
+    except BaseException as e:
+        logging.exception(e)

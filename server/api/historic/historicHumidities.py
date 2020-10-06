@@ -1,5 +1,5 @@
 # Endpoint for humidity route
-from server.server import app
+from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -24,7 +24,6 @@ def historic_humidity_get_all():
 		logging.debug("humidity get all request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/<int:id>', methods=['GET'])
@@ -40,7 +39,6 @@ def historic_humidity_get_by_id(id):
 		logging.debug("humidity get by id request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/search', methods=['GET'])
@@ -66,7 +64,6 @@ def historic_humidity_get_by_search():
 		logging.debug("humidity get by search request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=dataArray, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/oldest', methods=['GET'])
@@ -82,7 +79,6 @@ def historic_humidity_get_oldest():
 		logging.debug("humidity get oldest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/newest', methods=['GET'])
@@ -98,7 +94,6 @@ def historic_humidity_get_newest():
 		logging.debug("humidity get newest request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/average', methods=['GET'])
@@ -112,7 +107,6 @@ def historic_humidity_get_average():
 		logging.debug("humidity get average request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/average/range', methods=['GET'])
@@ -136,7 +130,6 @@ def historic_humidity_get_average_in_range():
 		logging.debug("humidity get average in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route("/historic/humidities/reset", methods=["DELETE"])
@@ -155,7 +148,6 @@ def historic_humidities_reset():
 		logging.debug("Humidity reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 @app.route('/historic/humidities/reset/range', methods=['DELETE'])
@@ -184,5 +176,4 @@ def historic_humidities_reset_in_range():
 		logging.debug("Humidity reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
