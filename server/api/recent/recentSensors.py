@@ -1,5 +1,4 @@
 # Abstract endpoint grouping  sensor readings together
-from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -8,11 +7,13 @@ from model.recent.RecentSensorModel import RecentSensorModel
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+recent_sensors_api = Blueprint('recent_sensors_api', __name__)
 logging.getLogger(__name__)
 
 
-@app.route('/recent/sensors', methods=['GET'])
+@recent_sensors_api.route("",methods=['GET'])
 def recent_sensors_get_all():
 	logging.debug("Received request /recent/sensors")
 	startTime = time.monotonic()
@@ -28,7 +29,7 @@ def recent_sensors_get_all():
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/search', methods=['GET'])
+@recent_sensors_api.route('/search', methods=['GET'])
 def recent_sensors_get_by_search():
 	logging.debug("Received request /recent/sensors/search")
 	startTime = time.monotonic()
@@ -53,7 +54,7 @@ def recent_sensors_get_by_search():
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/oldest', methods=['GET'])
+@recent_sensors_api.route('/oldest', methods=['GET'])
 def recent_sensors_get_oldest():
 	logging.debug("Received request /recent/sensors/oldest")
 	startTime = time.monotonic()
@@ -68,7 +69,7 @@ def recent_sensors_get_oldest():
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/newest', methods=['GET'])
+@recent_sensors_api.route('/newest', methods=['GET'])
 def recent_sensors_get_newest():
 	logging.debug("Received request /recent/sensors/newest")
 	startTime = time.monotonic()
@@ -83,7 +84,7 @@ def recent_sensors_get_newest():
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/average', methods=['GET'])
+@recent_sensors_api.route('/average', methods=['GET'])
 def recent_sensors_get_average():
 	logging.debug("Received request /recent/sensors/average")
 	startTime = time.monotonic()
@@ -98,7 +99,7 @@ def recent_sensors_get_average():
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/average/range', methods=['GET'])
+@recent_sensors_api.route('/average/range', methods=['GET'])
 def sensors_get_average_in_range():
 	logging.debug("Received request /recent/sensors/average/range")
 	startTime = time.monotonic()
@@ -122,7 +123,7 @@ def sensors_get_average_in_range():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route("/recent/sensors/reset", methods=["DELETE"])
+@recent_sensors_api.route("/reset", methods=["DELETE"])
 def recent_sensors_reset():
 	logging.debug("Received request /recent/sensors/reset")
 	startTime = time.monotonic()
@@ -140,7 +141,7 @@ def recent_sensors_reset():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/sensors/reset/range', methods=['DELETE'])
+@recent_sensors_api.route('/reset/range', methods=['DELETE'])
 def recent_sensors_reset_in_range():
 	logging.debug("Received request /recent/sensors/reset/range")
 	startTime = time.monotonic()

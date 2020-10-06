@@ -1,5 +1,4 @@
 # Endpoint for co2 route
-from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -8,10 +7,12 @@ from model.recent.RecentCO2Model import RecentCO2Model
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+recent_co2_api = Blueprint('recent_co2_api', __name__)
 logging.getLogger(__name__)
 
-@app.route('/recent/co2', methods=['GET'])
+@recent_co2_api.route('', methods=['GET'])
 def recent_co2_get_all():
 	logging.debug("Received request /recent/co2")
 	startTime = time.monotonic()
@@ -26,7 +27,7 @@ def recent_co2_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/<int:id>', methods=['GET'])
+@recent_co2_api.route('/<int:id>', methods=['GET'])
 def recent_co2_get_by_id(id):
 	logging.debug("Received request /recent/co2/<id>")
 	startTime = time.monotonic()
@@ -41,7 +42,7 @@ def recent_co2_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/search', methods=['GET'])
+@recent_co2_api.route('/search', methods=['GET'])
 def recent_co2_get_by_search():
 	logging.debug("Received request /recent/co2/search")
 	startTime = time.monotonic()
@@ -66,7 +67,7 @@ def recent_co2_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/oldest', methods=['GET'])
+@recent_co2_api.route('/oldest', methods=['GET'])
 def recent_co2_get_oldest():
 	logging.debug("Received request /recent/co2/oldest")
 	startTime = time.monotonic()
@@ -81,7 +82,7 @@ def recent_co2_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/newest', methods=['GET'])
+@recent_co2_api.route('/newest', methods=['GET'])
 def recent_co2_get_newest():
 	logging.debug("Received request /recent/co2/newest")
 	startTime = time.monotonic()
@@ -96,7 +97,7 @@ def recent_co2_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/average', methods=['GET'])
+@recent_co2_api.route('/average', methods=['GET'])
 def recent_co2_get_average():
 	logging.debug("Received request /recent/co2/average")
 	startTime = time.monotonic()
@@ -109,7 +110,7 @@ def recent_co2_get_average():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/average/range', methods=['GET'])
+@recent_co2_api.route('/average/range', methods=['GET'])
 def recent_co2_get_average_in_range():
 	logging.debug("Received request /recent/co2/average/range")
 	startTime = time.monotonic()
@@ -132,7 +133,7 @@ def recent_co2_get_average_in_range():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route("/recent/co2/reset", methods=["DELETE"])
+@recent_co2_api.route("/reset", methods=["DELETE"])
 def recent_co2_reset():
 	logging.debug("Received request /recent/co2/reset")
 	startTime = time.monotonic()
@@ -150,7 +151,7 @@ def recent_co2_reset():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/co2/reset/range', methods=['DELETE'])
+@recent_co2_api.route('/reset/range', methods=['DELETE'])
 def recent_co2_reset_in_range():
 	logging.debug("Received request /recent/co2/reset/range")
 	startTime = time.monotonic()

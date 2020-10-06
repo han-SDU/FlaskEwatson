@@ -1,5 +1,4 @@
 # Endpoint for temperatures route
-from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -9,10 +8,12 @@ from model.historic.HistoricTemperatureModel import HistoricTemperatureModel
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+historic_temperatures_api = Blueprint('historic_temperatures_api', __name__)
 logging.getLogger(__name__)
 
-@app.route('/historic/temperatures', methods=['GET'])
+@historic_temperatures_api.route('', methods=['GET'])
 def historic_temperatures_get_all():
 	logging.debug("Received request /historic/temperatures")
 	startTime = time.monotonic()
@@ -27,7 +28,7 @@ def historic_temperatures_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/<int:id>', methods=['GET'])
+@historic_temperatures_api.route('/<int:id>', methods=['GET'])
 def historic_temperatures_get_by_id(id):
 	logging.debug("Received request /historic/temperatures/<id>")
 	startTime = time.monotonic()
@@ -42,7 +43,7 @@ def historic_temperatures_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/search', methods=['GET'])
+@historic_temperatures_api.route('/search', methods=['GET'])
 def historic_temperatures_get_by_search():
 	logging.debug("Received request /historic/temperatures/search")
 	startTime = time.monotonic()
@@ -67,7 +68,7 @@ def historic_temperatures_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/oldest', methods=['GET'])
+@historic_temperatures_api.route('/oldest', methods=['GET'])
 def historic_temperatures_get_oldest():
 	logging.debug("Received request /historic/temperatures/oldest")
 	startTime = time.monotonic()
@@ -82,7 +83,7 @@ def historic_temperatures_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/newest', methods=['GET'])
+@historic_temperatures_api.route('/newest', methods=['GET'])
 def historic_temperatures_get_newest():
 	logging.debug("Received request /historic/temperatures/newest")
 	startTime = time.monotonic()
@@ -97,7 +98,7 @@ def historic_temperatures_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/average', methods=['GET'])
+@historic_temperatures_api.route('/average', methods=['GET'])
 def historic_temperatures_get_average():
 	logging.debug("Received request /historic/temperatures/average")
 	startTime = time.monotonic()
@@ -110,7 +111,7 @@ def historic_temperatures_get_average():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/average/range', methods=['GET'])
+@historic_temperatures_api.route('/average/range', methods=['GET'])
 def historic_temperatures_get_average_in_range():
 	logging.debug("Received request /historic/temperatures/average/range")
 	startTime = time.monotonic()
@@ -133,7 +134,7 @@ def historic_temperatures_get_average_in_range():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route("/historic/temperatures/reset", methods=["DELETE"])
+@historic_temperatures_api.route("/reset", methods=["DELETE"])
 def historic_temperatures_reset():
 	logging.debug("Received request /historic/temperatures/reset")
 	startTime = time.monotonic()
@@ -151,7 +152,7 @@ def historic_temperatures_reset():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/temperatures/reset/range', methods=['DELETE'])
+@historic_temperatures_api.route('/reset/range', methods=['DELETE'])
 def historic_temperatures_reset_in_range():
 	logging.debug("Received request /historic/temperatures/reset/range")
 	startTime = time.monotonic()

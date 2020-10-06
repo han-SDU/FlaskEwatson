@@ -48,7 +48,7 @@ def main(argv):
         if not os.path.exists('logging/reading'):
             os.makedirs('logging/reading')
         fileLogger = handlers.RotatingFileHandler(
-            filename="logging/"+args.logFileName+".log", maxBytes=10*1024*1024, backupCount=5)
+            filename="logging/reading/"+args.logFileName+".log", maxBytes=10*1024*1024, backupCount=5)
         fileLogger.setLevel(args.fileLogLevel)
         fileLogger.setFormatter(logFormatter)
         rootLogger.addHandler(fileLogger)

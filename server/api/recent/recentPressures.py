@@ -1,5 +1,4 @@
 # Endpoint for pressure route
-from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -8,10 +7,12 @@ from model.recent.RecentPressureModel import RecentPressureModel
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+recent_pressures_api = Blueprint('recent_pressures_api', __name__)
 logging.getLogger(__name__)
 
-@app.route('/recent/pressures', methods=['GET'])
+@recent_pressures_api.route('', methods=['GET'])
 def recent_pressure_get_all():
 	logging.debug("Received request /recent/pressures")
 	startTime = time.monotonic()
@@ -26,7 +27,7 @@ def recent_pressure_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/<int:id>', methods=['GET'])
+@recent_pressures_api.route('/<int:id>', methods=['GET'])
 def recent_pressure_get_by_id(id):
 	logging.debug("Received request /recent/pressures/<id>")
 	startTime = time.monotonic()
@@ -41,7 +42,7 @@ def recent_pressure_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/search', methods=['GET'])
+@recent_pressures_api.route('/search', methods=['GET'])
 def recent_pressure_get_by_search():
 	logging.debug("Received request /recent/pressures/search")
 	startTime = time.monotonic()
@@ -66,7 +67,7 @@ def recent_pressure_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/oldest', methods=['GET'])
+@recent_pressures_api.route('/oldest', methods=['GET'])
 def recent_pressure_get_oldest():
 	logging.debug("Received request /recent/pressures/oldest")
 	startTime = time.monotonic()
@@ -81,7 +82,7 @@ def recent_pressure_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/newest', methods=['GET'])
+@recent_pressures_api.route('/newest', methods=['GET'])
 def recent_pressure_get_newest():
 	logging.debug("Received request /recent/pressures/newest")
 	startTime = time.monotonic()
@@ -96,7 +97,7 @@ def recent_pressure_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/average', methods=['GET'])
+@recent_pressures_api.route('/average', methods=['GET'])
 def recent_pressures_get_average():
 	logging.debug("Received request /recent/pressures/average")
 	startTime = time.monotonic()
@@ -109,7 +110,7 @@ def recent_pressures_get_average():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/average/range', methods=['GET'])
+@recent_pressures_api.route('/average/range', methods=['GET'])
 def pressure_get_average_in_range():
 	logging.debug("Received request /recent/pressures/average/range")
 	startTime = time.monotonic()
@@ -132,7 +133,7 @@ def pressure_get_average_in_range():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route("/recent/pressures/reset", methods=["DELETE"])
+@recent_pressures_api.route("/recent/pressures/reset", methods=["DELETE"])
 def recent_pressures_reset():
 	logging.debug("Received request /recent/pressures/reset")
 	startTime = time.monotonic()
@@ -150,7 +151,7 @@ def recent_pressures_reset():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/recent/pressures/reset/range', methods=['DELETE'])
+@recent_pressures_api.route('/reset/range', methods=['DELETE'])
 def recent_pressures_reset_in_range():
 	logging.debug("Received request /recent/pressures/reset/range")
 	startTime = time.monotonic()

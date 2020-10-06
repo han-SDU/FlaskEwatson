@@ -19,20 +19,35 @@ app.config['JSON_SORT_KEYS'] = False
 FlaskJSON(app)
 CORS(app)
 
-import server.handlers 
-import server.api.base
+from server.handlers import error_handler_api
+from server.api.base import base_api
 
-import server.api.historic.historicCO2
-import server.api.historic.historicHumidities
-import server.api.historic.historicPressures
-import server.api.historic.historicSensors
-import server.api.historic.historicTemperatures
+from server.api.historic.historicCO2 import historic_co2_api
+from server.api.historic.historicHumidities import historic_humidities_api
+from server.api.historic.historicPressures import historic_pressures_api
+from server.api.historic.historicSensors import historic_sensors_api
+from server.api.historic.historicTemperatures import historic_temperatures_api
 
-import server.api.recent.recentCO2
-import server.api.recent.recentHumidities
-import server.api.recent.recentPressures
-import server.api.recent.recentSensors
-import server.api.recent.recentTemperatures
+from server.api.recent.recentCO2 import recent_co2_api
+from server.api.recent.recentHumidities import recent_humidities_api
+from server.api.recent.recentPressures import recent_pressures_api
+from server.api.recent.recentSensors import recent_sensors_api
+from server.api.recent.recentTemperatures import recent_temperatures_api
+
+app.register_blueprint(error_handler_api)
+app.register_blueprint(base_api)
+
+app.register_blueprint(historic_co2_api, url_prefix="/historic/co2")
+app.register_blueprint(historic_humidities_api, url_prefix="/historic/humidities")
+app.register_blueprint(historic_pressures_api, url_prefix="/historic/pressures")
+app.register_blueprint(historic_sensors_api, url_prefix="/historic/sensors")
+app.register_blueprint(historic_temperatures_api, url_prefix="/historic/temperatures")
+
+app.register_blueprint(recent_co2_api, url_prefix="/recent/co2")
+app.register_blueprint(recent_humidities_api, url_prefix="/recent/humidities")
+app.register_blueprint(recent_pressures_api, url_prefix="/recent/pressures")
+app.register_blueprint(recent_sensors_api, url_prefix="/recent/sensors")
+app.register_blueprint(recent_temperatures_api, url_prefix="/recent/temperatures")
 
 def main(argv):
     # Parsing argv

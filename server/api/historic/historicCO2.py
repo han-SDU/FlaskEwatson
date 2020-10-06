@@ -8,10 +8,12 @@ from model.historic.HistoricCO2Model import HistoricCO2Model
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+historic_co2_api = Blueprint('historic_co2_api', __name__)
 logging.getLogger(__name__)
 
-@app.route('/historic/co2', methods=['GET'])
+@historic_co2_api.route('', methods=['GET'])
 def historic_co2_get_all():
 	logging.debug("Received request /historic/co2")
 	startTime = time.monotonic()
@@ -26,7 +28,7 @@ def historic_co2_get_all():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/<int:id>', methods=['GET'])
+@historic_co2_api.route('/<int:id>', methods=['GET'])
 def historic_co2_get_by_id(id):
 	logging.debug("Received request /historic/co2/<id>")
 	startTime = time.monotonic()
@@ -41,7 +43,7 @@ def historic_co2_get_by_id(id):
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/search', methods=['GET'])
+@historic_co2_api.route('/search', methods=['GET'])
 def historic_co2_get_by_search():
 	logging.debug("Received request /historic/co2/search")
 	startTime = time.monotonic()
@@ -66,7 +68,7 @@ def historic_co2_get_by_search():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/oldest', methods=['GET'])
+@historic_co2_api.route('/oldest', methods=['GET'])
 def historic_co2_get_oldest():
 	logging.debug("Received request /historic/co2/oldest")
 	startTime = time.monotonic()
@@ -81,7 +83,7 @@ def historic_co2_get_oldest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/newest', methods=['GET'])
+@historic_co2_api.route('/newest', methods=['GET'])
 def historic_co2_get_newest():
 	logging.debug("Received request /historic/co2/newest")
 	startTime = time.monotonic()
@@ -96,7 +98,7 @@ def historic_co2_get_newest():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/average', methods=['GET'])
+@historic_co2_api.route('/average', methods=['GET'])
 def historic_co2_get_average():
 	logging.debug("Received request /historic/co2/average")
 	startTime = time.monotonic()
@@ -109,7 +111,7 @@ def historic_co2_get_average():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/average/range', methods=['GET'])
+@historic_co2_api.route('/average/range', methods=['GET'])
 def historic_co2_get_average_in_range():
 	logging.debug("Received request /historic/co2/average/range")
 	startTime = time.monotonic()
@@ -132,7 +134,7 @@ def historic_co2_get_average_in_range():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route("/historic/co2/reset", methods=["DELETE"])
+@historic_co2_api.route("/reset", methods=["DELETE"])
 def historic_co2_reset():
 	logging.debug("Received request /historic/co2/reset")
 	startTime = time.monotonic()
@@ -150,7 +152,7 @@ def historic_co2_reset():
 	except mariadb.Error as e:
 		abort(500, str(e))
 
-@app.route('/historic/co2/reset/range', methods=['DELETE'])
+@historic_co2_api.route('/reset/range', methods=['DELETE'])
 def historic_co2_reset_in_range():
 	logging.debug("Received request /historic/co2/reset/range")
 	startTime = time.monotonic()
