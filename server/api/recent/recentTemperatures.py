@@ -1,5 +1,4 @@
 # Endpoint for temperatures route
-from __main__ import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
