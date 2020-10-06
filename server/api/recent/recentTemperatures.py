@@ -17,7 +17,6 @@ def temperatures_get_all():
 	logging.debug("Received request /recent/temperatures")
 	startTime = time.monotonic()
 	try:
-		raise Exception("MUAHA")
 		dataArray = []
 		temperatureArray = RecentTemperatureModel.get_all()
 		for tempModel in temperatureArray:
