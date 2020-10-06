@@ -29,7 +29,7 @@ create table if not exists tbl_co2(
 create table if not exists tbl_pressure(
 	fld_pk_id int not null auto_increment,
 	fld_time timestamp,
-	fld_value decimal(5,1) not null,
+	fld_value decimal(7,2) not null,
 	primary key(fld_pk_id)
 );
 

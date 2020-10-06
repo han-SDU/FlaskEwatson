@@ -94,7 +94,7 @@ def collectData():
 		hum_raw  = (data[6] << 8)  |  data[7]
 		
 		comp_T(temp_raw)
-		#comp_P(pres_raw)
+		comp_P(pres_raw)
 		comp_H(hum_raw)
 
 	def comp_P(adc_pres):
@@ -118,7 +118,7 @@ def collectData():
 		v1 = (dP[8] * (((pressure / 8.0) * (pressure / 8.0)) / 8192.0)) / 4096
 		v2 = ((pressure / 4.0) * dP[7]) / 8192.0
 		pressure = pressure + ((v1 + v2 + dP[6]) / 16.0)  
-		#print "pressure : %7.2f hPa" % (pressure/100)
+		pressure = pressure/100 #converts to hPa
 		
 		# Save to db
 		newReading = PressureModel(None,None,pressure)
