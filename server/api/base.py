@@ -2,7 +2,6 @@ from datetime import datetime
 from flask_json import json_response as res
 from flask import request as req
 from flask import Flask
-from __main__ import app
 import logging
 from flask import Blueprint
 
