@@ -70,22 +70,10 @@ def main(argv):
         logging.info("File log level: " + args.fileLogLevel)
         logging.info("File logging output: logging/"+args.logFileName+".log")
 
-        import server.handlers 
-        import server.api.base
-
-        import server.api.historic.historicCO2
-        import server.api.historic.historicHumidities
-        import server.api.historic.historicPressures
-        import server.api.historic.historicSensors
-        import server.api.historic.historicTemperatures
-
-        import server.api.recent.recentCO2
-        import server.api.recent.recentHumidities
-        import server.api.recent.recentPressures
-        import server.api.recent.recentSensors
-        import server.api.recent.recentTemperatures
-
-        app.run(debug=args.debug,host=args.host,port=args.port)
+        app.debug= args.debug
+        app.host= args.host
+        app.port= args.port
+        start()
 
         Event().wait()
         logging.info('Exit with ctrl-c')
@@ -94,6 +82,23 @@ def main(argv):
     except BaseException as e:
         logging.exception(e)
 
+def start():
+    import server.handlers 
+    import server.api.base
+
+    import server.api.historic.historicCO2
+    import server.api.historic.historicHumidities
+    import server.api.historic.historicPressures
+    import server.api.historic.historicSensors
+    import server.api.historic.historicTemperatures
+
+    import server.api.recent.recentCO2
+    import server.api.recent.recentHumidities
+    import server.api.recent.recentPressures
+    import server.api.recent.recentSensors
+    import server.api.recent.recentTemperatures
+ 
+    app.run()
 
     # Add a catch all
 if __name__ == "__main__":
@@ -101,3 +106,4 @@ if __name__ == "__main__":
 	    main(sys.argv[1:])
     except BaseException as e:
         logging.exception(e)
+
