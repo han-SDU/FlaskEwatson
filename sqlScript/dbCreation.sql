@@ -21,7 +21,7 @@ create table if not exists tbl_historic_temperature(
 create table if not exists tbl_recent_humidity(
 	fld_pk_id int not null auto_increment,
 	fld_time timestamp not null,
-	fld_value decimal(4,2) not null,
+	fld_value decimal(5,2) not null,
 	primary key(fld_pk_id)
 );
 
@@ -29,7 +29,7 @@ create table if not exists tbl_historic_humidity(
 	fld_pk_id int not null auto_increment,
 	fld_start_time timestamp not null,
 	fld_end_time timestamp not null,
-	fld_average decimal(4,2),
+	fld_average decimal(5,2),
 	primary key(fld_pk_id)
 );
 
@@ -53,7 +53,7 @@ create table if not exists tbl_historic_co2(
 create table if not exists tbl_recent_pressure(
 	fld_pk_id int not null auto_increment,
 	fld_time timestamp not null,
-	fld_value decimal(5,2) not null,
+	fld_value decimal(6,2) not null,
 	primary key(fld_pk_id)
 );
 
@@ -61,7 +61,7 @@ create table if not exists tbl_historic_pressure(
 	fld_pk_id int not null auto_increment,
 	fld_start_time timestamp not null,
 	fld_end_time timestamp not null,
-	fld_average decimal(5,2),
+	fld_average decimal(6,2),
 	primary key(fld_pk_id)
 );
 

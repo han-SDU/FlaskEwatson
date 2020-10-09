@@ -1,5 +1,4 @@
 # Abstract endpoint grouping  sensor readings together
-from server.server import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -8,11 +7,13 @@ from model.recent.RecentSensorModel import RecentSensorModel
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+recent_sensors_api = Blueprint('recent_sensors_api', __name__)
 logging.getLogger(__name__)
 
 
-@app.route('/recent/sensors', methods=['GET'])
+@recent_sensors_api.route("",methods=['GET'])
 def recent_sensors_get_all():
 	logging.debug("Received request /recent/sensors")
 	startTime = time.monotonic()
@@ -25,11 +26,10 @@ def recent_sensors_get_all():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/search', methods=['GET'])
+@recent_sensors_api.route('/search', methods=['GET'])
 def recent_sensors_get_by_search():
 	logging.debug("Received request /recent/sensors/search")
 	startTime = time.monotonic()
@@ -51,11 +51,10 @@ def recent_sensors_get_by_search():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/oldest', methods=['GET'])
+@recent_sensors_api.route('/oldest', methods=['GET'])
 def recent_sensors_get_oldest():
 	logging.debug("Received request /recent/sensors/oldest")
 	startTime = time.monotonic()
@@ -67,11 +66,10 @@ def recent_sensors_get_oldest():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/newest', methods=['GET'])
+@recent_sensors_api.route('/newest', methods=['GET'])
 def recent_sensors_get_newest():
 	logging.debug("Received request /recent/sensors/newest")
 	startTime = time.monotonic()
@@ -83,11 +81,10 @@ def recent_sensors_get_newest():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/average', methods=['GET'])
+@recent_sensors_api.route('/average', methods=['GET'])
 def recent_sensors_get_average():
 	logging.debug("Received request /recent/sensors/average")
 	startTime = time.monotonic()
@@ -99,11 +96,10 @@ def recent_sensors_get_average():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/recent/sensors/average/range', methods=['GET'])
+@recent_sensors_api.route('/average/range', methods=['GET'])
 def sensors_get_average_in_range():
 	logging.debug("Received request /recent/sensors/average/range")
 	startTime = time.monotonic()
@@ -125,10 +121,9 @@ def sensors_get_average_in_range():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
-@app.route("/recent/sensors/reset", methods=["DELETE"])
+@recent_sensors_api.route("/reset", methods=["DELETE"])
 def recent_sensors_reset():
 	logging.debug("Received request /recent/sensors/reset")
 	startTime = time.monotonic()
@@ -144,10 +139,9 @@ def recent_sensors_reset():
 		logging.debug("sensors reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
-@app.route('/recent/sensors/reset/range', methods=['DELETE'])
+@recent_sensors_api.route('/reset/range', methods=['DELETE'])
 def recent_sensors_reset_in_range():
 	logging.debug("Received request /recent/sensors/reset/range")
 	startTime = time.monotonic()
@@ -173,5 +167,4 @@ def recent_sensors_reset_in_range():
 		logging.debug("sensors reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))

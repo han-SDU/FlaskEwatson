@@ -1,5 +1,4 @@
 # Abstract endpoint grouping  sensor readings together
-from server.server import app
 from flask_json import json_response as res
 from flask import request as req
 from flask import abort
@@ -8,11 +7,13 @@ from model.historic.HistoricSensorModel import HistoricSensorModel
 import logging
 import time
 import mariadb
+from flask import Blueprint
 
+historic_sensors_api = Blueprint('historic_sensors_api', __name__)
 logging.getLogger(__name__)
 
 
-@app.route('/historic/sensors', methods=['GET'])
+@historic_sensors_api.route('', methods=['GET'])
 def historic_sensors_get_all():
 	logging.debug("Received request /historic/sensors")
 	startTime = time.monotonic()
@@ -24,11 +25,10 @@ def historic_sensors_get_all():
 		logging.debug("sensors get all request time: " + str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
   
 
-@app.route('/historic/sensors/search', methods=['GET'])
+@historic_sensors_api.route('/search', methods=['GET'])
 def historic_sensors_get_by_search():
 	logging.debug("Received request /historic/sensors/search")
 	startTime = time.monotonic()
@@ -50,11 +50,10 @@ def historic_sensors_get_by_search():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/historic/sensors/oldest', methods=['GET'])
+@historic_sensors_api.route('/oldest', methods=['GET'])
 def historic_sensors_get_oldest():
 	logging.debug("Received request /historic/sensors/oldest")
 	startTime = time.monotonic()
@@ -66,11 +65,10 @@ def historic_sensors_get_oldest():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/historic/sensors/newest', methods=['GET'])
+@historic_sensors_api.route('/newest', methods=['GET'])
 def historic_sensors_get_newest():
 	logging.debug("Received request /historic/sensors/newest")
 	startTime = time.monotonic()
@@ -82,11 +80,10 @@ def historic_sensors_get_newest():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/historic/sensors/average', methods=['GET'])
+@historic_sensors_api.route('/average', methods=['GET'])
 def historic_sensors_get_average():
 	logging.debug("Received request /historic/sensors/average")
 	startTime = time.monotonic()
@@ -98,11 +95,10 @@ def historic_sensors_get_average():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, time=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
 
-@app.route('/historic/sensors/average/range', methods=['GET'])
+@historic_sensors_api.route('/average/range', methods=['GET'])
 def historic_sensors_get_average_in_range():
 	logging.debug("Received request /historic/sensors/average/range")
 	startTime = time.monotonic()
@@ -124,10 +120,9 @@ def historic_sensors_get_average_in_range():
 					  str(round(elapsedTime, 5)) + " seconds")
 		return res(200, data=data, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
-@app.route("/historic/sensors/reset", methods=["DELETE"])
+@historic_sensors_api.route("/reset", methods=["DELETE"])
 def historic_sensors_reset():
 	logging.debug("Received request /historic/sensors/reset")
 	startTime = time.monotonic()
@@ -143,10 +138,9 @@ def historic_sensors_reset():
 		logging.debug("temperature reset request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
 
-@app.route('/historic/sensors/reset/range', methods=['DELETE'])
+@historic_sensors_api.route('/reset/range', methods=['DELETE'])
 def historic_sensors_reset_in_range():
 	logging.debug("Received request /historic/sensors/reset/range")
 	startTime = time.monotonic()
@@ -172,5 +166,4 @@ def historic_sensors_reset_in_range():
 		logging.debug("temperature reset in range request time: " + str(round(elapsedTime,5))+ " seconds")
 		return res(204, timeUTC=datetime.utcnow())
 	except mariadb.Error as e:
-		logging.exception(e)
 		abort(500, str(e))
