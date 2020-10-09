@@ -112,7 +112,7 @@ def main(argv):
     # Add a catch all
 if __name__ == "__main__":
     try:
-	    main(sys.argv[1:])
+        main(sys.argv[1:])
     except BaseException as e:
         logging.exception(e)
 

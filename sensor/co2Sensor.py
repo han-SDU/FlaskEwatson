@@ -3,7 +3,7 @@ import time
 import random
 import os
 import logging
-from model.CO2Model import CO2Model
+from model.recent.RecentCO2Model import RecentCO2Model
 
 logging.getLogger(__name__)
 
