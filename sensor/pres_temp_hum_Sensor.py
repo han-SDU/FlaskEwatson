@@ -21,7 +21,7 @@ def mockRun():
 		try:
 			# Create Mock data
 			value = random.uniform(-30,40)
-			newReading = TemperatureModel(None,None,value)
+			newReading = RecentTemperatureModel(None,None,value)
 
 			# Save to db
 			logging.info("Generating mock data for temperature sensor with value: "+str(value))
