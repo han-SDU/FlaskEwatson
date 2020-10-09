@@ -4,9 +4,9 @@ import os
 import random
 import logging
 from smbus2 import SMBus
-from model.TemperatureModel import TemperatureModel
-from model.PressureModel import PressureModel
-from model.HumidityModel import HumidityModel
+from model.recent.RecentTemperatureModel import RecentTemperatureModel
+from model.recent.RecentPressureModel import RecentPressureModel
+from model.recent.RecentHumidityModel import RecentHumidityModel
 
 logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ def collectData():
 		pressure = pressure/100 #converts to hPa
 		
 		# Save to db
-		newReading = PressureModel(None,None,pressure)
+		newReading = RecentPressureModel(None,None,pressure)
 		logging.info("Reading pressure sensor with value: "+str(pressure))
 		newReading.post()
 
@@ -134,7 +134,7 @@ def collectData():
 		#print "temp : %-6.2f " % (temperature) 
 		
 		# Save to db
-		newReading = TemperatureModel(None,None,temperature)
+		newReading = RecentTemperatureModel(None,None,temperature)
 		logging.info("Reading temperature sensor with value: "+str(temperature))
 		newReading.post()
 
@@ -153,7 +153,7 @@ def collectData():
 		#print "hum : %6.2f" % (humidity)
 		
 		# Save to db
-		newReading = HumidityModel(None,None,humidity)
+		newReading = RecentHumidityModel(None,None,humidity)
 		logging.info("Reading humidity sensor with value: "+str(humidity))
 		newReading.post()
 
