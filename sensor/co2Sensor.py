@@ -18,7 +18,7 @@ def mockRun():
 		try:
 			# Create Mock data
 			value = random.uniform(0,69)
-			newReading = CO2Model(None,None,value)
+			newReading = RecentCO2Model(None,None,value)
 
 			# Insert into db
 			logging.info("Generating mock data for co2 sensor with value: "+str(value))
@@ -72,7 +72,7 @@ def collectData():
 			obj = T6713()
 			value = obj.gasPPM()
 			#print "PPM: ", value
-			newReading = CO2Model(None,None,value)
+			newReading = RecentCO2Model(None,None,value)
 
 			# Insert into db
 			logging.info("Collected co2 sensor data with value: "+str(value))
