@@ -6,11 +6,8 @@ import argparse
 import logging
 import logging.handlers as handlers
 from threading import Event
-from server import server
-from sensor import temperatureSensor
-from sensor import pressureSensor
-from sensor import humiditySensor
 from sensor import co2Sensor
+from sensor import pres_temp_hum_Sensor
 
 # Main entry point of application
 
@@ -65,23 +62,11 @@ def main(argv):
         logging.info("File logging output: logging/"+args.logFileName+".log")
 
         # Sensor related start up
-        logging.info('Starting Temperature Sensor')
-        temperatureDaemon = threading.Thread(
-            target=temperatureSensor.run, daemon=True)
-        temperatureDaemon.name = "TemperatureDaemon"
-        temperatureDaemon.start()
-
-        logging.info('Starting Pressure Sensor')
-        pressureDaemon = threading.Thread(
-            target=pressureSensor.run, daemon=True)
-        pressureDaemon.name = "PressureDaemon"
-        pressureDaemon.start()
-
-        logging.info('Starting Humidity Sensor')
-        humidityDaemon = threading.Thread(
-            target=humiditySensor.run, daemon=True)
-        humidityDaemon.name = "HumidityDaemon"
-        humidityDaemon.start()
+        logging.info('Starting PTH Sensor')
+        PTHDaemon = threading.Thread(
+            target=pres_temp_hum_Sensor.run, daemon=True)
+        PTHDaemon.name = "PTHDaemon"
+        PTHDaemon.start()
 
         logging.info('Starting CO2 Sensor')
         co2Daemon = threading.Thread(target=co2Sensor.run, daemon=True)
